@@ -1,0 +1,129 @@
+html {
+    scroll-behavior: smooth;
+}
+
+/* Ocultar e estender inputs baseado no idioma ativo (apenas no site público, não no painel administrativo) */
+
+/* Se o idioma for Inglês (EN) */
+html[lang="en"]:not(.admin-panel) .lang-pt {
+    display: none !important;
+}
+html[lang="en"]:not(.admin-panel) .lang-en {
+    grid-column: span 2 / span 2 !important;
+}
+html[lang="en"]:not(.admin-panel) .grid-cols-3 .lang-en {
+    grid-column: span 2 / span 2 !important;
+}
+
+/* Se o idioma for Português (PT-BR) */
+html[lang="pt-br"]:not(.admin-panel) .lang-en,
+html[lang^="pt"]:not(.admin-panel) .lang-en {
+    display: none !important;
+}
+html[lang="pt-br"]:not(.admin-panel) .lang-pt,
+html[lang^="pt"]:not(.admin-panel) .lang-pt {
+    grid-column: span 2 / span 2 !important;
+}
+html[lang="pt-br"]:not(.admin-panel) .grid-cols-3 .lang-pt,
+html[lang^="pt"]:not(.admin-panel) .grid-cols-3 .lang-pt {
+    grid-column: span 2 / span 2 !important;
+}
+
+/* Markdown Content Styles (overriding Tailwind Preflight) */
+.markdown-content strong,
+.prose strong {
+    font-weight: 700 !important;
+}
+.markdown-content em,
+.prose em {
+    font-style: italic !important;
+}
+.markdown-content a,
+.prose a {
+    color: #0d9488 !important;
+    text-decoration: underline !important;
+}
+.markdown-content a:hover,
+.prose a:hover {
+    color: #0f766e !important;
+}
+.markdown-content ul,
+.prose ul {
+    list-style-type: disc !important;
+    margin-left: 1.5rem !important;
+    margin-bottom: 1rem !important;
+}
+.markdown-content ol,
+.prose ol {
+    list-style-type: decimal !important;
+    margin-left: 1.5rem !important;
+    margin-bottom: 1rem !important;
+}
+.markdown-content p,
+.prose p {
+    margin-bottom: 0.75rem !important;
+}
+.markdown-content p:last-child,
+.prose p:last-child {
+    margin-bottom: 0 !important;
+}
+
+/* Collaborator Card Bio Smooth Expand on Hover */
+.collab-bio {
+    position: relative;
+    max-height: 5.5rem; /* approx height of 4 lines */
+    overflow: hidden;
+    transition: max-height 0.4s ease-in-out !important;
+}
+.collab-bio::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 1.5rem;
+    background: linear-gradient(transparent, #f3f4f6);
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+.group:hover .collab-bio {
+    max-height: 25rem !important;
+}
+.group:hover .collab-bio::after {
+    opacity: 0;
+}
+
+/* Timeline Window Smooth Expand on Hover */
+.timeline-window {
+    position: relative;
+    max-height: 600px;
+    transition: max-height 0.5s ease-in-out !important;
+}
+.timeline-window::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3rem;
+    background: linear-gradient(transparent, #f3f4f6);
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+.group:hover .timeline-window {
+    max-height: 150rem !important;
+}
+.group:hover .timeline-window::after {
+    opacity: 0;
+}
+
+/* Sticky Navbar Opacity Transition */
+.main-nav {
+    transition: opacity 0.25s ease-in-out !important;
+}
+.main-nav.scrolled {
+    opacity: 0.15;
+}
+.main-nav.scrolled:hover {
+    opacity: 1;
+}
