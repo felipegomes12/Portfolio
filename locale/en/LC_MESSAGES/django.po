@@ -1,0 +1,593 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: PORTFOLIO\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-01 02:10-0300\n"
+"PO-Revision-Date: 2026-07-01 02:10-0300\n"
+"Last-Translator: Antigravity\n"
+"Language-Team: Português <-> Inglês\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Início"
+msgstr "Home"
+
+msgid "Projetos"
+msgstr "Projects"
+
+msgid "Sobre mim"
+msgstr "About me"
+
+msgid "Contatos"
+msgstr "Contacts"
+
+msgid "Desenvolvedor Full Stack"
+msgstr "Full Stack Developer"
+
+msgid "Olá! Este é o seu espaço de portfólio. Entre no painel administrativo para preencher suas informações de perfil, biografia, redes sociais e gerenciar seus projetos de forma dinâmica."
+msgstr "Hello! This is your portfolio space. Log in to the admin panel to fill in your profile info, biography, social networks, and manage projects dynamically."
+
+msgid "Local"
+msgstr "Location"
+
+msgid "// Meus Projetos"
+msgstr "// My Projects"
+
+msgid "Filtre ou pesquise abaixo os sistemas e soluções técnicas que desenvolvi."
+msgstr "Filter or search below the systems and technical solutions I have developed."
+
+msgid "Filtrar por nome ou tecnologia..."
+msgstr "Filter by name or technology..."
+
+msgid "Todos"
+msgstr "All"
+
+msgid "Saber Mais"
+msgstr "Know More"
+
+msgid "Nenhum projeto cadastrado"
+msgstr "No projects registered"
+
+msgid "Acesse a área administrativa para cadastrar o seu primeiro projeto!"
+msgstr "Access the admin area to register your first project!"
+
+msgid "// Sobre Mim"
+msgstr "// About Me"
+
+msgid "Conheça minha trajetória profissional, competências e conquistas acadêmicas."
+msgstr "Learn about my professional trajectory, skills, and academic achievements."
+
+msgid "Nenhuma biografia detalhada foi adicionada ainda. Acesse o painel do administrador para adicionar a sua história profissional completa!"
+msgstr "No detailed biography has been added yet. Access the admin panel to add your complete professional history!"
+
+msgid "Habilidades e Tags"
+msgstr "Skills and Tags"
+
+msgid "Nenhuma skill ou tag cadastrada no perfil."
+msgstr "No skills or tags registered in the profile."
+
+msgid "Atual"
+msgstr "Present"
+
+msgid "Nenhuma experiência registrada."
+msgstr "No experience registered."
+
+msgid "Cursando"
+msgstr "In Progress"
+
+msgid "Visualizar Certificado"
+msgstr "View Certificate"
+
+msgid "Nenhuma formação ou curso registrado."
+msgstr "No education or course registered."
+
+msgid "Entre em contato!"
+msgstr "Get in touch!"
+
+msgid "Ficou interessado em colaborar em algum projeto ou quer bater um papo profissional? Fique à vontade para me enviar uma mensagem direta!"
+msgstr "Are you interested in collaborating on some project or want to have a professional chat? Feel free to send me a direct message!"
+
+msgid "Enviar E-mail"
+msgstr "Send Email"
+
+msgid "ou copie o e-mail:"
+msgstr "or copy the email:"
+
+msgid "Nenhum e-mail de contato configurado no banco de dados."
+msgstr "No contact email configured in the database."
+
+msgid "Voltar ao Portfólio"
+msgstr "Back to Portfolio"
+
+msgid "Sobre o Projeto"
+msgstr "About the Project"
+
+msgid "Galeria"
+msgstr "Gallery"
+
+msgid "Recursos"
+msgstr "Resources"
+
+msgid "Repositório Código"
+msgstr "Code Repository"
+
+msgid "Este projeto está sob controle de versão. Visite o repositório público no GitHub para explorar o código fonte, commits, issues e releases:"
+msgstr "This project is under version control. Visit the public repository on GitHub to explore the source code, commits, issues, and releases:"
+
+msgid "Abrir no GitHub"
+msgstr "Open on GitHub"
+
+msgid "Nenhum repositório do GitHub foi cadastrado para este projeto."
+msgstr "No GitHub repository has been registered for this project."
+
+msgid "Imagens do Sistema"
+msgstr "System Images"
+
+msgid "Nenhuma captura de tela cadastrada na galeria."
+msgstr "No screenshots registered in the gallery."
+
+msgid "Nenhum recurso técnico cadastrado."
+msgstr "No technical resources registered."
+
+msgid "// Tópicos de Implementação"
+msgstr "// Implementation Topics"
+
+msgid "Link do Repositório GitHub"
+msgstr "GitHub Repository Link"
+
+# Admin Dashboard & Navigation
+msgid "Perfil"
+msgstr "Profile"
+
+msgid "Experiência"
+msgstr "Experience"
+
+msgid "Formação"
+msgstr "Education"
+
+msgid "Sair"
+msgstr "Sign out"
+
+msgid "Olá, Administrador!"
+msgstr "Hello, Administrator!"
+
+msgid "Bem-vindo ao painel de controle do seu portfólio. A partir daqui, você pode gerenciar suas informações de perfil, competências técnicas, experiências de trabalho, formação acadêmica e portfólio de projetos dinamicamente."
+msgstr "Welcome to your portfolio control panel. From here, you can dynamically manage your profile details, technical competencies, work experiences, academic education, and project portfolio."
+
+msgid "Experiências"
+msgstr "Experiences"
+
+msgid "Cursos / Graus"
+msgstr "Courses / Degrees"
+
+msgid "Certificações"
+msgstr "Certifications"
+
+msgid "Gerenciar Projetos"
+msgstr "Manage Projects"
+
+msgid "Crie, edite ou remova os seus projetos e tópicos do portfólio."
+msgstr "Create, edit or remove your projects and topics from the portfolio."
+
+msgid "Editar Perfil"
+msgstr "Edit Profile"
+
+msgid "Atualize sua foto, bio, competências e links de redes sociais."
+msgstr "Update your photo, bio, competencies and social network links."
+
+msgid "Histórico Profissional"
+msgstr "Professional History"
+
+msgid "Insira e remova cargos, datas e descrições de sua carreira."
+msgstr "Insert and remove positions, dates and descriptions from your career."
+
+msgid "Cursos e Certificações"
+msgstr "Courses and Certifications"
+
+msgid "Cadastre diplomas, faculdade, cursos livres e envie certificados."
+msgstr "Register diplomas, college, free courses and upload certificates."
+
+# Admin Login
+msgid "Proteção de Conta"
+msgstr "Account Protection"
+
+msgid "Bem-vindo"
+msgstr "Welcome"
+
+msgid "Efetue login para gerenciar o portfólio."
+msgstr "Log in to manage the portfolio."
+
+msgid "E-mail ou senha inválidos."
+msgstr "Invalid email or password."
+
+msgid "Senha"
+msgstr "Password"
+
+msgid "Manter conectado"
+msgstr "Keep connected"
+
+msgid "Acessar Painel"
+msgstr "Access Panel"
+
+# Admin Profile Editor
+msgid "Nome Completo"
+msgstr "Full Name"
+
+msgid "Especialidade / Cargo"
+msgstr "Specialty / Position"
+
+msgid "Especialidade / Cargo (EN)"
+msgstr "Specialty / Position (EN)"
+
+msgid "Biografia Curta (Bio)"
+msgstr "Short Biography (Bio)"
+
+msgid "Biografia Curta (Bio - EN)"
+msgstr "Short Biography (Bio - EN)"
+
+msgid "Um resumo de uma linha para a seção hero..."
+msgstr "A one-line summary for the hero section..."
+
+msgid "Sobre Mim (Texto Completo)"
+msgstr "About Me (Full Text)"
+
+msgid "Sobre Mim (Texto Completo - EN)"
+msgstr "About Me (Full Text - EN)"
+
+msgid "Conte sua trajetória detalhadamente..."
+msgstr "Tell your trajectory in detail..."
+
+msgid "Localização"
+msgstr "Location"
+
+msgid "Localização (EN)"
+msgstr "Location (EN)"
+
+msgid "E-mail de Contato"
+msgstr "Contact Email"
+
+msgid "Nome de Usuário do GitHub"
+msgstr "GitHub Username"
+
+msgid "Link Completo do LinkedIn"
+msgstr "Full LinkedIn Link"
+
+msgid "Data de Nascimento"
+msgstr "Date of Birth"
+
+msgid "Data de Início na Carreira"
+msgstr "Career Start Date"
+
+msgid "Foto de Perfil"
+msgstr "Profile Picture"
+
+msgid "Selecione uma imagem quadrada de retrato"
+msgstr "Select a square portrait image"
+
+msgid "Remover Foto"
+msgstr "Remove Photo"
+
+msgid "Deslocamento X"
+msgstr "Offset X"
+
+msgid "Deslocamento Y"
+msgstr "Offset Y"
+
+msgid "Competências / Tecnologias (Skills)"
+msgstr "Competencies / Technologies (Skills)"
+
+msgid "Nenhuma tag cadastrada no banco."
+msgstr "No tags registered in database."
+
+msgid "Nome da Skill"
+msgstr "Skill Name"
+
+msgid "Classe FontAwesome (Opcional)"
+msgstr "FontAwesome Class (Optional)"
+
+msgid "Criar Skill"
+msgstr "Create Skill"
+
+msgid "Salvar Perfil"
+msgstr "Save Profile"
+
+# Admin Projects Editor
+msgid "Novo Projeto"
+msgstr "New Project"
+
+msgid "Preencha as informações técnicas do projeto"
+msgstr "Fill in the project technical details"
+
+msgid "Título do Projeto"
+msgstr "Project Title"
+
+msgid "Título do Projeto (EN)"
+msgstr "Project Title (EN)"
+
+msgid "Descrição Detalhada"
+msgstr "Detailed Description"
+
+msgid "Escreva sobre o funcionamento do projeto..."
+msgstr "Write about how the project works..."
+
+msgid "Descrição Detalhada (EN)"
+msgstr "Detailed Description (EN)"
+
+msgid "Ícone do Projeto (Capa)"
+msgstr "Project Icon (Cover)"
+
+msgid "Selecionar imagem de capa"
+msgstr "Select cover image"
+
+msgid "Imagens da Galeria (Múltiplas)"
+msgstr "Gallery Images (Multiple)"
+
+msgid "Selecionar capturas de tela"
+msgstr "Select screenshots"
+
+msgid "Nenhuma imagem selecionada."
+msgstr "No image selected."
+
+msgid "Tags do Projeto (Tecnologias)"
+msgstr "Project Tags (Technologies)"
+
+msgid "Separadas por vírgula"
+msgstr "Separated by comma"
+
+msgid "Título da Seção de Recursos"
+msgstr "Resource Section Title"
+
+msgid "Título da Seção de Recursos (EN)"
+msgstr "Resource Section Title (EN)"
+
+msgid "Itens dos Recursos"
+msgstr "Resource Items"
+
+msgid "Um item de especificação por linha..."
+msgstr "One specification item per line..."
+
+msgid "Itens dos Recursos (EN)"
+msgstr "Resource Items (EN)"
+
+msgid "Tags dos Recursos"
+msgstr "Resource Tags"
+
+msgid "Tags extras para os recursos. Uma por linha."
+msgstr "Extra tags for resources. One per line."
+
+msgid "Tags dos Recursos (EN)"
+msgstr "Resource Tags (EN)"
+
+msgid "Tópicos Detalhados de Implementação"
+msgstr "Detailed Implementation Topics"
+
+msgid "Adicionar Tópico"
+msgstr "Add Topic"
+
+msgid "Observações / Anotações Extra"
+msgstr "Observations / Extra Notes"
+
+msgid "Adicione qualquer nota extra sobre o deploy ou infra..."
+msgstr "Add any extra note about deploy or infrastructure..."
+
+msgid "Observações / Anotações Extra (EN)"
+msgstr "Observations / Extra Notes (EN)"
+
+msgid "Cancelar"
+msgstr "Cancel"
+
+msgid "Salvar Projeto"
+msgstr "Save Project"
+
+msgid "Filtrar projetos..."
+msgstr "Filter projects..."
+
+msgid "Novo projeto"
+msgstr "New project"
+
+msgid "Nome"
+msgstr "Name"
+
+msgid "Criado em"
+msgstr "Created at"
+
+msgid "Ações"
+msgstr "Actions"
+
+msgid "Carregando resultados..."
+msgstr "Loading results..."
+
+# Admin Experience Editor
+msgid "Nova Experiência"
+msgstr "New Experience"
+
+msgid "Preencha os dados do cargo e da empresa"
+msgstr "Fill in the position and company details"
+
+msgid "Cargo / Função"
+msgstr "Position / Role"
+
+msgid "Cargo / Função (EN)"
+msgstr "Position / Role (EN)"
+
+msgid "Empresa / Instituição"
+msgstr "Company / Institution"
+
+msgid "Descrição das Atividades"
+msgstr "Activities Description"
+
+msgid "Descreva suas responsabilidades e conquistas..."
+msgstr "Describe your responsibilities and achievements..."
+
+msgid "Descrição das Atividades (EN)"
+msgstr "Activities Description (EN)"
+
+msgid "Data de Início"
+msgstr "Start Date"
+
+msgid "Data de Término (Vazio se atual)"
+msgstr "End Date (Empty if present)"
+
+msgid "Tecnologias Utilizadas (Tags)"
+msgstr "Used Technologies (Tags)"
+
+msgid "Salvar Experiência"
+msgstr "Save Experience"
+
+# Admin Formation Editor
+msgid "Nova formação"
+msgstr "New education"
+
+msgid "Nova Formação / Curso"
+msgstr "New Education / Course"
+
+msgid "Preencha os dados do curso e instituição"
+msgstr "Fill in the course and institution details"
+
+msgid "Nome do Curso / Habilitação"
+msgstr "Course Name / Degree"
+
+msgid "Nome do Curso (EN)"
+msgstr "Course Name (EN)"
+
+msgid "Instituição de Ensino"
+msgstr "Educational Institution"
+
+msgid "Tipo de Formação"
+msgstr "Education Type"
+
+msgid "Curso Livre / Certificação"
+msgstr "Free Course / Certification"
+
+msgid "Graduação"
+msgstr "Graduation"
+
+msgid "Tecnólogo"
+msgstr "Technologist"
+
+msgid "Pós-Graduação / Especialização"
+msgstr "Postgraduate / Specialization"
+
+msgid "Mestrado / Doutorado"
+msgstr "Master / Doctorate"
+
+msgid "Tipo de Formação (EN)"
+msgstr "Education Type (EN)"
+
+msgid "Imagem do Certificado (Opcional)"
+msgstr "Certificate Image (Optional)"
+
+msgid "Selecionar imagem"
+msgstr "Select image"
+
+msgid "Data de Conclusão (Vazio se cursando)"
+msgstr "Completion Date (Empty if in progress)"
+
+msgid "Salvar Formação"
+msgstr "Save Education"
+
+msgid "Cursos e Formações Acadêmicas"
+msgstr "Academic Courses and Education"
+
+msgid "Curso / Diploma"
+msgstr "Course / Diploma"
+
+msgid "Instituição"
+msgstr "Institution"
+
+msgid "Período"
+msgstr "Period"
+
+# Access Telemetry Dashboard
+msgid "Visualizações"
+msgstr "Page Views"
+
+msgid "Visitantes"
+msgstr "Visitors"
+
+msgid "acessos"
+msgstr "visits"
+
+msgid "Acessos diários ao portfólio público na última semana."
+msgstr "Daily visits to the public portfolio in the last week."
+
+msgid "Nenhum tráfego logado ainda."
+msgstr "No traffic logged yet."
+
+msgid "IP"
+msgstr "IP"
+
+msgid "Data/Hora"
+msgstr "Date/Time"
+
+msgid "Caminho"
+msgstr "Path"
+
+msgid "Dispositivo / Navegador"
+msgstr "Device / Browser"
+
+msgid "Nenhum log gravado."
+msgstr "No logs recorded."
+
+msgid "Telemetria de Acessos"
+msgstr "Access Telemetry"
+
+msgid "Acompanhe em tempo real quem visita o seu portfólio. Apenas acessos de visitantes públicos são registrados — sessões de administrador são ignoradas."
+msgstr "Track in real time who visits your portfolio. Only public visitor accesses are recorded — admin sessions are excluded."
+
+# Collaborators
+msgid "// Colaboradores"
+msgstr "// Collaborators"
+
+msgid "Pessoas incríveis com quem tenho a oportunidade de colaborar em projetos e soluções."
+msgstr "Incredible people I have the opportunity to collaborate with on projects and solutions."
+
+msgid "Nenhum colaborador cadastrado"
+msgstr "No collaborators registered"
+
+msgid "Os colaboradores com quem trabalho aparecerão aqui."
+msgstr "The collaborators I work with will appear here."
+
+msgid "Colaboradores"
+msgstr "Collaborators"
+
+msgid "Novo Colaborador"
+msgstr "New Collaborator"
+
+msgid "Preencha os dados do colaborador"
+msgstr "Fill in the collaborator details"
+
+msgid "Foto do Colaborador (Opcional)"
+msgstr "Collaborator Photo (Optional)"
+
+msgid "Área de Atuação / Cargo"
+msgstr "Area of Expertise / Role"
+
+msgid "Área de Atuação / Cargo (EN)"
+msgstr "Area of Expertise / Role (EN)"
+
+msgid "Biografia"
+msgstr "Biography"
+
+msgid "Biografia (EN)"
+msgstr "Biography (EN)"
+
+msgid "Link do Portfólio"
+msgstr "Portfolio Link"
+
+msgid "GitHub"
+msgstr "GitHub"
+
+msgid "Salvar Colaborador"
+msgstr "Save Collaborator"
+
+msgid "Área de Atuação"
+msgstr "Area of Expertise"
+
+msgid "Links"
+msgstr "Links"
+
+msgid "Gerencie os dados das pessoas com quem você trabalha."
+msgstr "Manage the data of the people you work with."

@@ -1,0 +1,12 @@
+asgiref==3.11.1
+click==8.4.2
+colorama==0.4.6
+Django==6.0.3
+h11==0.16.0
+pillow==12.2.0
+psycopg2-binary==2.9.11
+sqlparse==0.5.5
+tzdata==2026.1
+uvicorn==0.49.0
+markdown==3.10.2
+python-dotenv==1.0.1

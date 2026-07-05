@@ -1,0 +1,326 @@
+{% extends "admin/base.html" %}
+{% load static %}
+{% load i18n %}
+{% block content %}
+<!-- MODAL DE PROJETO -->
+<div 
+    id="modal_new_project"
+    class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-sm p-4 font-mono"
+>
+    <!-- modal box -->
+    <div class="w-full max-w-5xl max-h-[95vh] overflow-y-auto bg-white rounded-2xl shadow-2xl border border-teal-800 flex flex-col font-mono text-sm text-gray-800">
+        
+        <!-- Header de janela de sistema -->
+        <div class="bg-gray-100 border-t-16 rounded-t-2xl border-l-16 border-b-8 border-r-8 p-4 flex justify-between items-center border-teal-800 sticky top-0 z-10">
+            <div>
+                <h2 id="modal_title" class="text-xl font-bold text-gray-900">
+                    {% translate "Novo Projeto" %}
+                </h2>
+                <p class="text-xs text-gray-500 mt-1">
+                    {% translate "Preencha as informações técnicas do projeto" %}
+                </p>
+            </div>
+            <div class="flex items-center gap-3">
+                <div class="flex gap-1.5 mr-2">
+                    <div class="bg-blue-600 w-2.5 h-2.5 rounded-full"></div>
+                    <div class="bg-yellow-500 w-2.5 h-2.5 rounded-full"></div>
+                    <div class="bg-red-500 w-2.5 h-2.5 rounded-full"></div>
+                </div>
+                <button 
+                    class="w-8 h-8 rounded hover:bg-gray-200 transition cursor-pointer text-gray-600 flex items-center justify-center border border-gray-300 shadow-sm"
+                    onclick="closeModal()"
+                >
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Body Form -->
+        <div class="p-6 flex flex-col gap-6 bg-white rounded-b-2xl border-l-16 border-r-8 border-b-8 border-teal-800">
+            <input type="hidden" id="project_id" value="">
+
+            <!-- Informações principais -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Título -->
+                <div class="flex flex-col gap-2 lang-pt">
+                    <label class="font-bold text-gray-700">{% translate "Título do Projeto" %} *</label>
+                    <input 
+                        type="text"
+                        id="project_title"
+                        class="bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:border-teal-600 text-gray-900 font-mono"
+                        placeholder="Ex: pfSense Firewall"
+                        required
+                    >
+                </div>
+                <!-- Título EN -->
+                <div class="flex flex-col gap-2 lang-en">
+                    <label class="font-bold text-gray-700">{% translate "Título do Projeto (EN)" %}</label>
+                    <input 
+                        type="text"
+                        id="project_title_en"
+                        class="bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:border-teal-600 text-gray-900 font-mono"
+                        placeholder="Ex: pfSense Firewall"
+                    >
+                </div>
+                <!-- GitHub -->
+                <div class="flex flex-col gap-2">
+                    <label class="font-bold text-gray-700">{% translate "Link do Repositório GitHub" %}</label>
+                    <input 
+                        type="url"
+                        id="project_github_rep_link"
+                        class="bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:border-teal-600 text-gray-900 font-mono"
+                        placeholder="https://github.com/usuario/repositorio"
+                    >
+                </div>
+            </div>
+
+            <!-- Descrições -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="flex flex-col gap-2 lang-pt">
+                    <label class="font-bold text-gray-700">{% translate "Descrição Detalhada" %} *</label>
+                    <textarea 
+                        rows="4"
+                        id="project_description"
+                        class="bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 resize-none focus:outline-none focus:border-teal-600 text-gray-900 font-mono"
+                        placeholder="{% translate 'Escreva sobre o funcionamento do projeto...' %}"
+                        required
+                    ></textarea>
+                </div>
+                <div class="flex flex-col gap-2 lang-en">
+                    <label class="font-bold text-gray-700">{% translate "Descrição Detalhada (EN)" %}</label>
+                    <textarea 
+                        rows="4"
+                        id="project_description_en"
+                        class="bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 resize-none focus:outline-none focus:border-teal-600 text-gray-900 font-mono"
+                        placeholder="Write about the project operations in English..."
+                    ></textarea>
+                </div>
+            </div>
+
+            <!-- Uploads -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Ícone -->
+                <div class="flex flex-col gap-2">
+                    <label class="font-bold text-gray-700">{% translate "Ícone do Projeto (Capa)" %}</label>
+                    <div class="flex items-center gap-4">
+                        <label class="flex-grow border-2 border-dashed border-gray-300 rounded-xl p-4 bg-gray-50 hover:bg-gray-100 transition cursor-pointer flex flex-col items-center gap-2">
+                            <i class="fa-solid fa-image text-2xl text-gray-400"></i>
+                            <span class="text-xs text-gray-500">{% translate "Selecionar imagem de capa" %}</span>
+                            <input type="file" id="project_icon" class="hidden" accept="image/*" onchange="previewIcon(event)">
+                        </label>
+                        <div id="icon_preview_container" class="w-20 h-20 border border-gray-300 rounded-lg bg-gray-50 flex items-center justify-center overflow-hidden shrink-0">
+                            <i class="fa-solid fa-image text-gray-300 text-3xl"></i>
+                        </div>
+                    </div>
+                </div>
+                <!-- Galeria -->
+                <div class="flex flex-col gap-2">
+                    <label class="font-bold text-gray-700">{% translate "Imagens da Galeria (Múltiplas)" %}</label>
+                    <div class="flex flex-col gap-2">
+                        <label class="border-2 border-dashed border-gray-300 rounded-xl p-4 bg-gray-50 hover:bg-gray-100 transition cursor-pointer flex flex-col items-center gap-2">
+                            <i class="fa-solid fa-images text-2xl text-gray-400"></i>
+                            <span class="text-xs text-gray-500">{% translate "Selecionar capturas de tela" %}</span>
+                            <input type="file" id="project_gallery_input" class="hidden" multiple accept="image/*" onchange="previewGallery(event)">
+                        </label>
+                        <div id="gallery_preview_container" class="flex flex-wrap gap-2 max-h-24 overflow-y-auto border border-gray-200 p-2 rounded bg-gray-50">
+                            <span class="text-xs text-gray-400 italic">{% translate "Nenhuma imagem selecionada." %}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tags e Seção de Recursos -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="flex flex-col gap-2">
+                    <label class="font-bold text-gray-700">{% translate "Tags do Projeto (Tecnologias)" %}</label>
+                    <input 
+                        type="text"
+                        id="project_tags"
+                        class="bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:border-teal-600 text-gray-900 font-mono"
+                        placeholder="Python, Django, Docker..."
+                    >
+                    <span class="text-[10px] text-gray-500 font-bold">{% translate "Separadas por vírgula" %}</span>
+                </div>
+                <div class="flex flex-col gap-2 lang-pt">
+                    <label class="font-bold text-gray-700">{% translate "Título da Seção de Recursos" %}</label>
+                    <input 
+                        type="text"
+                        id="project_resorce_title"
+                        class="bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:border-teal-600 text-gray-900 font-mono"
+                        placeholder="Ex: Recursos Técnicos Utilizados"
+                    >
+                </div>
+                <div class="flex flex-col gap-2 lang-en">
+                    <label class="font-bold text-gray-700">{% translate "Título da Seção de Recursos (EN)" %}</label>
+                    <input 
+                        type="text"
+                        id="project_resorce_title_en"
+                        class="bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:border-teal-600 text-gray-900 font-mono"
+                        placeholder="Ex: Technical Resources Used"
+                    >
+                </div>
+            </div>
+
+            <!-- Listas de Recursos -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Itens -->
+                <div class="flex flex-col gap-2 lang-pt">
+                    <label class="font-bold text-gray-700">{% translate "Itens dos Recursos" %}</label>
+                    <textarea 
+                        rows="3"
+                        id="project_resorce_list"
+                        class="bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 resize-none focus:outline-none focus:border-teal-600 text-gray-900 font-mono"
+                        placeholder="{% translate 'Um item de especificação por linha...' %}"
+                    ></textarea>
+                </div>
+                <!-- Itens EN -->
+                <div class="flex flex-col gap-2 lang-en">
+                    <label class="font-bold text-gray-700">{% translate "Itens dos Recursos (EN)" %}</label>
+                    <textarea 
+                        rows="3"
+                        id="project_resorce_list_en"
+                        class="bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 resize-none focus:outline-none focus:border-teal-600 text-gray-900 font-mono"
+                        placeholder="One specification item per line in English..."
+                    ></textarea>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Tags de Recursos -->
+                <div class="flex flex-col gap-2 lang-pt">
+                    <label class="font-bold text-gray-700">{% translate "Tags dos Recursos" %}</label>
+                    <textarea 
+                        rows="3"
+                        id="project_resorce_tags"
+                        class="bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 resize-none focus:outline-none focus:border-teal-600 text-gray-900 font-mono"
+                        placeholder="{% translate 'Tags extras para os recursos. Uma por linha.' %}"
+                    ></textarea>
+                </div>
+                <!-- Tags de Recursos (EN) -->
+                <div class="flex flex-col gap-2 lang-en">
+                    <label class="font-bold text-gray-700">{% translate "Tags dos Recursos (EN)" %}</label>
+                    <textarea 
+                        rows="3"
+                        id="project_resorce_tags_en"
+                        class="bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 resize-none focus:outline-none focus:border-teal-600 text-gray-900 font-mono"
+                        placeholder="Extra resource tags in English. One per line."
+                    ></textarea>
+                </div>
+            </div>
+
+            <!-- Tópicos Dinâmicos -->
+            <div class="flex flex-col gap-4 border-t border-gray-200 pt-4">
+                <div class="flex justify-between items-center">
+                    <label class="font-bold text-gray-700 text-base">{% translate "Tópicos Detalhados de Implementação" %}</label>
+                    <button 
+                        type="button"
+                        onclick="addTopicInput()" 
+                        class="bg-teal-700 hover:bg-teal-800 transition text-white px-3 py-1.5 rounded font-bold cursor-pointer text-xs flex items-center gap-1.5 shadow"
+                    >
+                        <i class="fa-solid fa-plus"></i> {% translate "Adicionar Tópico" %}
+                    </button>
+                </div>
+                <!-- Container de Tópicos -->
+                <div id="topics_container" class="flex flex-col gap-4">
+                    <!-- Tópicos serão adicionados aqui via JS -->
+                </div>
+            </div>
+
+            <!-- Observações extras -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 border-t border-gray-200 pt-4">
+                <div class="flex flex-col gap-2 lang-pt">
+                    <label class="font-bold text-gray-700">{% translate "Observações / Anotações Extra" %}</label>
+                    <textarea 
+                        rows="3"
+                        id="project_note"
+                        class="bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 resize-none focus:outline-none focus:border-teal-600 text-gray-900 font-mono"
+                        placeholder="{% translate 'Adicione qualquer nota extra sobre o deploy ou infra...' %}"
+                    ></textarea>
+                </div>
+                <div class="flex flex-col gap-2 lang-en">
+                    <label class="font-bold text-gray-700">{% translate "Observações / Anotações Extra (EN)" %}</label>
+                    <textarea 
+                        rows="3"
+                        id="project_note_en"
+                        class="bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 resize-none focus:outline-none focus:border-teal-600 text-gray-900 font-mono"
+                        placeholder="Add any extra deploy or infrastructure notes in English..."
+                    ></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer da janela -->
+        <div class="bg-gray-100 border-t border-gray-200 px-6 py-4 flex justify-end gap-3 rounded-b-2xl sticky bottom-0 z-10">
+            <button 
+                onclick="closeModal()"
+                class="px-5 py-2.5 rounded border border-gray-300 hover:bg-gray-200 transition font-bold cursor-pointer bg-white text-gray-700 text-xs shadow-sm"
+            >
+                {% translate "Cancelar" %}
+            </button>
+            <button 
+                id="save_project_btn"
+                onclick="saveProject()"
+                class="px-5 py-2.5 rounded bg-teal-700 hover:bg-teal-800 text-white font-bold transition flex items-center gap-1.5 shadow-lg text-xs cursor-pointer"
+            >
+                <i class="fa-solid fa-floppy-disk"></i> {% translate "Salvar Projeto" %}
+            </button>
+        </div>
+
+    </div>
+</div>
+
+<!-- CONTAINER PRINCIPAL DA TELA -->
+<div class="w-full max-w-4xl flex justify-center flex-col items-center gap-6 font-mono text-sm text-gray-800">
+
+    <!-- Barra de busca e botão novo -->
+    <div class="w-full bg-gray-100 rounded-lg shadow-xl p-3 flex justify-between items-center border border-teal-800">
+        <div class="relative">
+            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+            <input 
+                type="text" 
+                id="search_input"
+                class="shadow-inner bg-white rounded-lg py-2 pl-10 pr-4 w-72 border border-gray-300 text-gray-900 focus:outline-none focus:border-teal-600"
+                placeholder="{% translate 'Filtrar projetos...' %}"
+                oninput="debouncedFetch()"
+            >
+        </div>    
+        <div>
+            <button 
+                onclick="openModal()" 
+                class="bg-teal-700 text-white font-bold py-2 px-4 rounded-lg shadow-lg hover:bg-teal-800 cursor-pointer transition flex items-center gap-1.5"
+            >
+                {% translate "Novo projeto" %} <i class="fa-solid fa-file-circle-plus"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Tabela de Listagem -->
+    <div id="div_table" class="w-full bg-gray-100 rounded-lg shadow-xl overflow-hidden border border-teal-800">
+        <table class="w-full text-left text-gray-700 text-xs">
+            <thead class="bg-gray-200 text-gray-800 uppercase border-b border-gray-300">
+                <tr>
+                    <th class="px-6 py-4 font-bold">{% translate "Nome" %}</th>
+                    <th class="px-6 py-4 font-bold">Link</th>
+                    <th class="px-6 py-4 font-bold">{% translate "Criado em" %}</th>
+                    <th class="px-6 py-4 font-bold text-center">{% translate "Ações" %}</th>
+                </tr>
+            </thead>
+            <tbody id="projects_table_body">
+                <!-- Renderizado via JS -->
+            </tbody>
+        </table>
+
+        <!-- Paginação -->
+        <div class="w-full flex justify-between items-center px-6 py-4 bg-gray-200 border-t border-gray-300 text-xs font-bold">
+            <span id="pagination_info" class="text-gray-600 font-bold">
+                {% translate "Carregando resultados..." %}
+            </span>
+            <div id="pagination_buttons" class="flex gap-2">
+                <!-- Renderizado via JS -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'js/adminProjects.js' %}"></script>
+{% endblock %}

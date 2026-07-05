@@ -1,0 +1,175 @@
+{% extends "admin/base.html" %}
+{% load static %}
+{% load i18n %}
+{% block content %}
+<div class="max-w-5xl w-full px-6 py-10 font-mono text-gray-800 flex flex-col gap-8">
+
+    <!-- Cabeçalho -->
+    <div class="w-full flex flex-col">
+        <div class="bg-gray-100 border-t-16 rounded-t-lg border-l-16 border-b-8 border-r-8 shadow-xl p-3 flex justify-between items-center border-teal-800">
+            <h1 class="text-md font-bold text-gray-900 flex items-center gap-2">
+                <i class="fa-solid fa-chart-line text-teal-600"></i> analytics://admin/telemetria.sh
+            </h1>
+            <div class="flex gap-2">
+                <div class="bg-blue-600 w-3 h-3 rounded-full"></div>
+                <div class="bg-yellow-500 w-3 h-3 rounded-full"></div>
+                <div class="bg-red-500 w-3 h-3 rounded-full"></div>
+            </div>
+        </div>
+        <div class="p-8 rounded-b-lg border-l-16 border-r-8 border-b-8 shadow-xl bg-gray-100 border-teal-800 flex flex-col gap-4">
+            <h2 class="text-2xl font-bold text-gray-900">{% translate "Telemetria de Acessos" %}</h2>
+            <p class="text-sm text-gray-600 leading-relaxed">
+                {% translate "Acompanhe em tempo real quem visita o seu portfólio. Apenas acessos de visitantes públicos são registrados — sessões de administrador são ignoradas." %}
+            </p>
+        </div>
+    </div>
+
+    <!-- Cards de Resumo -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <!-- Visualizações Totais -->
+        <div class="flex flex-col">
+            <div class="bg-gray-100 border-t-16 rounded-t-lg border-l-16 border-b-8 border-r-8 shadow-md p-2 flex justify-between items-center border-teal-800">
+                <span class="text-xs font-bold text-gray-900">views.db</span>
+                <div class="bg-teal-600 w-2.5 h-2.5 rounded-full"></div>
+            </div>
+            <div class="p-6 rounded-b-lg border-l-16 border-r-8 border-b-8 shadow-md bg-gray-100 border-teal-800 flex items-center justify-between">
+                <div>
+                    <span class="text-xs text-gray-500 block uppercase font-bold">{% translate "Visualizações" %}</span>
+                    <span class="text-3xl font-extrabold text-teal-900">{{ stats.total_views }}</span>
+                </div>
+                <div class="text-teal-600 text-3xl">
+                    <i class="fa-solid fa-eye"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Visitantes Únicos -->
+        <div class="flex flex-col">
+            <div class="bg-gray-100 border-t-16 rounded-t-lg border-l-16 border-b-8 border-r-8 shadow-md p-2 flex justify-between items-center border-teal-800">
+                <span class="text-xs font-bold text-gray-900">visitors.db</span>
+                <div class="bg-teal-600 w-2.5 h-2.5 rounded-full"></div>
+            </div>
+            <div class="p-6 rounded-b-lg border-l-16 border-r-8 border-b-8 shadow-md bg-gray-100 border-teal-800 flex items-center justify-between">
+                <div>
+                    <span class="text-xs text-gray-500 block uppercase font-bold">{% translate "Visitantes" %}</span>
+                    <span class="text-3xl font-extrabold text-teal-900">{{ stats.unique_visitors }}</span>
+                </div>
+                <div class="text-teal-600 text-3xl">
+                    <i class="fa-solid fa-users"></i>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Painel de Telemetria e Tráfego -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 w-full">
+
+        <!-- Gráfico de Acessos Recentes (7 dias) -->
+        <div class="flex flex-col lg:col-span-2">
+            <div class="bg-gray-100 border-t-16 rounded-t-lg border-l-16 border-b-8 border-r-8 shadow-xl p-3 flex justify-between items-center border-teal-800">
+                <h3 class="text-md font-bold text-gray-900 flex items-center gap-2">
+                    <i class="fa-solid fa-chart-simple text-teal-600"></i> trafego_7dias.sh
+                </h3>
+                <div class="flex gap-2">
+                    <div class="bg-blue-600 w-3 h-3 rounded-full"></div>
+                    <div class="bg-yellow-500 w-3 h-3 rounded-full"></div>
+                    <div class="bg-red-500 w-3 h-3 rounded-full"></div>
+                </div>
+            </div>
+            <div class="p-8 rounded-b-lg border-l-16 border-r-8 border-b-8 shadow-xl bg-gray-100 border-teal-800 flex flex-col gap-6 justify-between flex-grow min-h-[300px]">
+                <div class="flex items-end justify-between h-48 border-b border-gray-300 pb-2 pt-4 px-4 bg-white rounded-md border border-gray-200 shadow-inner">
+                    {% for day in daily_stats %}
+                        <div class="flex flex-col items-center flex-grow gap-2 group">
+                            <span class="text-[10px] font-bold text-teal-900 opacity-0 group-hover:opacity-100 transition duration-200 bg-teal-100 px-1 py-0.5 rounded border border-teal-200">
+                                {{ day.count }}
+                            </span>
+                            <div class="w-8 bg-teal-700 hover:bg-emerald-500 rounded-t transition-all duration-500 shadow-lg cursor-pointer"
+                                 style="height: {% if day.count > 0 %}{% widthratio day.count max_daily_count 140 %}{% else %}4{% endif %}px; min-height: 8px;">
+                            </div>
+                            <span class="text-[9px] font-bold text-gray-500 mt-1 uppercase" data-day-pt="{{ day.day_name_pt }}" data-day-en="{{ day.day_name_en }}">{{ day.day_name_pt }}</span>
+                            <span class="text-[8px] text-gray-400 font-bold -mt-1">{{ day.date }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+                <p class="text-xs text-gray-600 text-center italic font-semibold">
+                    {% translate "Acessos diários ao portfólio público na última semana." %}
+                </p>
+            </div>
+        </div>
+
+        <!-- Visitantes Mais Ativos -->
+        <div class="flex flex-col">
+            <div class="bg-gray-100 border-t-16 rounded-t-lg border-l-16 border-b-8 border-r-8 shadow-xl p-3 flex justify-between items-center border-teal-800">
+                <h3 class="text-md font-bold text-gray-900 flex items-center gap-2">
+                    <i class="fa-solid fa-ranking-star text-teal-600"></i> ranking_ips.txt
+                </h3>
+                <div class="flex gap-2">
+                    <div class="bg-blue-600 w-3 h-3 rounded-full"></div>
+                    <div class="bg-yellow-500 w-3 h-3 rounded-full"></div>
+                    <div class="bg-red-500 w-3 h-3 rounded-full"></div>
+                </div>
+            </div>
+            <div class="p-6 rounded-b-lg border-l-16 border-r-8 border-b-8 shadow-xl bg-gray-100 border-teal-800 flex flex-col gap-4 flex-grow max-h-[352px] overflow-y-auto">
+                <div class="flex flex-col gap-2">
+                    {% for visitor in top_visitors %}
+                        <div class="bg-white border border-gray-300 rounded p-2.5 flex justify-between items-center shadow-sm">
+                            <span class="font-mono text-xs text-gray-800 font-bold flex items-center gap-1.5">
+                                <i class="fa-solid fa-network-wired text-gray-400"></i> {{ visitor.ip_address }}
+                            </span>
+                            <span class="bg-teal-100 text-teal-800 px-2 py-0.5 rounded-full text-[10px] font-bold border border-teal-200">
+                                {{ visitor.total }} {% translate "acessos" %}
+                            </span>
+                        </div>
+                    {% empty %}
+                        <p class="text-xs text-gray-500 italic text-center py-4">{% translate "Nenhum tráfego logado ainda." %}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Tabela de Logs Recentes -->
+    <div class="w-full flex flex-col">
+        <div class="bg-gray-100 border-t-16 rounded-t-lg border-l-16 border-b-8 border-r-8 shadow-xl p-3 flex justify-between items-center border-teal-800">
+            <h3 class="text-md font-bold text-gray-900 flex items-center gap-2">
+                <i class="fa-solid fa-list-check text-teal-600"></i> logs_acesso.log
+            </h3>
+            <div class="flex gap-2">
+                <div class="bg-blue-600 w-3 h-3 rounded-full"></div>
+                <div class="bg-yellow-500 w-3 h-3 rounded-full"></div>
+                <div class="bg-red-500 w-3 h-3 rounded-full"></div>
+            </div>
+        </div>
+        <div class="p-6 rounded-b-lg border-l-16 border-r-8 border-b-8 shadow-xl bg-gray-100 border-teal-800 overflow-x-auto">
+            <table class="w-full text-left text-gray-700 text-xs font-mono">
+                <thead class="bg-gray-200 text-gray-800 uppercase border-b border-gray-300">
+                    <tr>
+                        <th class="px-4 py-3 font-bold">{% translate "IP" %}</th>
+                        <th class="px-4 py-3 font-bold">{% translate "Data/Hora" %}</th>
+                        <th class="px-4 py-3 font-bold">{% translate "Caminho" %}</th>
+                        <th class="px-4 py-3 font-bold">{% translate "Dispositivo / Navegador" %}</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    {% for log in recent_accesses %}
+                        <tr class="hover:bg-white/50 transition">
+                            <td class="px-4 py-2.5 font-bold text-gray-900">{{ log.ip_address }}</td>
+                            <td class="px-4 py-2.5 text-gray-600">{{ log.accessed_at|date:"d/m/Y H:i:s" }}</td>
+                            <td class="px-4 py-2.5 text-teal-700 font-bold">{{ log.page_path }}</td>
+                            <td class="px-4 py-2.5 text-gray-500 truncate max-w-xs" title="{{ log.user_agent }}">{{ log.user_agent|default:"-" }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="4" class="px-4 py-6 text-center text-gray-500 italic">{% translate "Nenhum log gravado." %}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

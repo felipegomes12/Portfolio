@@ -1,0 +1,7 @@
+{% load i18n %}
+<footer class="w-full text-center py-6 mt-10 font-mono">
+    <p class="text-white/70 text-sm">
+        © 2026 Felipe Gomes da Silva · 
+        <a href="{% url 'PrivacyPolicy' %}" class="hover:text-teal-400 transition underline">{% if LANGUAGE_CODE|slice:":2" == 'en' %}Privacy Policy{% else %}Política de Privacidade{% endif %}</a>
+    </p>
+</footer>

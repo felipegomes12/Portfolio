@@ -1,0 +1,49 @@
+{% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}" class="admin-panel">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Admin Portfolio{% endblock %}</title>
+
+    {% load static %}
+    
+    {% if user.is_authenticated %}
+    {% include "admin/navbar.html" %}
+    {% endif %}
+
+    <script src="https://kit.fontawesome.com/3c442b858d.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="{% static 'js/base.js' %}"></script>
+</head>
+<!-- claro na esquerda, escuro da direita -->
+<body class="min-h-screen flex flex-col bg-[radial-gradient(circle,_#0d9488_0%,_#042f2e_100%)]">
+    
+    <div id="tsparticles" class="fixed inset-0 -z-10"></div>
+    
+    <main class="flex-grow flex items-center justify-center">
+        {% block content %}
+
+        {% endblock %}
+    </main>
+
+</body>
+{% include "footer.html" %}
+
+<script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
+<script>
+    tsParticles.load("tsparticles", {
+    particles: {
+        number: { value: 50 },
+        size: { value: {min: 2, max: 4} },
+        move: { enable: true, speed: 2 },
+        opacity: { value: 0.2 },
+    },
+    background: {
+        color: "transparent"
+    }
+    });
+</script>
+</html>

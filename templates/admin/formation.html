@@ -1,0 +1,200 @@
+{% extends "admin/base.html" %}
+{% load static %}
+{% load i18n %}
+{% block content %}
+<!-- MODAL DE FORMAÇÃO -->
+<div 
+    id="modal_formation"
+    class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-sm p-4 font-mono"
+>
+    <!-- modal box -->
+    <div class="w-full max-w-2xl bg-white rounded-2xl shadow-2xl border border-teal-800 flex flex-col font-mono text-sm text-gray-800">
+        
+        <!-- Header de janela de sistema -->
+        <div class="bg-gray-100 border-t-16 rounded-t-2xl border-l-16 border-b-8 border-r-8 p-4 flex justify-between items-center border-teal-800 sticky top-0 z-10">
+            <div>
+                <h2 id="modal_title" class="text-xl font-bold text-gray-900">
+                    {% translate "Nova Formação / Curso" %}
+                </h2>
+                <p class="text-xs text-gray-500 mt-1">
+                    {% translate "Preencha os dados do curso e instituição" %}
+                </p>
+            </div>
+            <div class="flex items-center gap-3">
+                <div class="flex gap-1.5 mr-2">
+                    <div class="bg-blue-600 w-2.5 h-2.5 rounded-full"></div>
+                    <div class="bg-yellow-500 w-2.5 h-2.5 rounded-full"></div>
+                    <div class="bg-red-500 w-2.5 h-2.5 rounded-full"></div>
+                </div>
+                <button 
+                    class="w-8 h-8 rounded hover:bg-gray-200 transition cursor-pointer text-gray-600 flex items-center justify-center border border-gray-300 shadow-sm"
+                    onclick="closeModal()"
+                >
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Body Form -->
+        <form id="formation_form" onsubmit="saveFormation(event)" class="p-6 flex flex-col gap-5 bg-white rounded-b-2xl border-l-16 border-r-8 border-b-8 border-teal-800">
+            {% csrf_token %}
+            <input type="hidden" id="form_id" value="">
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <!-- Título do Curso -->
+                <div class="flex flex-col gap-2 lang-pt">
+                    <label class="font-bold text-gray-700">{% translate "Nome do Curso / Habilitação" %} *</label>
+                    <input 
+                        type="text"
+                        id="form_title"
+                        class="bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:border-teal-600 text-gray-900"
+                        placeholder="Ex: Análise e Desenvolvimento de Sistemas"
+                        required
+                    >
+                </div>
+                <!-- Título do Curso (EN) -->
+                <div class="flex flex-col gap-2 lang-en">
+                    <label class="font-bold text-gray-700">{% translate "Nome do Curso (EN)" %}</label>
+                    <input 
+                        type="text"
+                        id="form_title_en"
+                        class="bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:border-teal-600 text-gray-900"
+                        placeholder="Ex: Analysis and Systems Development"
+                    >
+                </div>
+                <!-- Instituição -->
+                <div class="flex flex-col gap-2">
+                    <label class="font-bold text-gray-700">{% translate "Instituição de Ensino" %} *</label>
+                    <input 
+                        type="text"
+                        id="form_institution"
+                        class="bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:border-teal-600 text-gray-900"
+                        placeholder="Ex: Universidade Federal"
+                        required
+                    >
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <!-- Tipo -->
+                <div class="flex flex-col gap-2 lang-pt">
+                    <label class="font-bold text-gray-700">{% translate "Tipo de Formação" %} *</label>
+                    <select 
+                        id="form_tipe" 
+                        class="bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:border-teal-600 text-gray-900 cursor-pointer"
+                        required
+                    >
+                        <option value="Curso Livre">{% translate "Curso Livre / Certificação" %}</option>
+                        <option value="Graduação">{% translate "Graduação" %}</option>
+                        <option value="Tecnólogo">{% translate "Tecnólogo" %}</option>
+                        <option value="Pós-Graduação">{% translate "Pós-Graduação / Especialização" %}</option>
+                        <option value="Mestrado / Doutorado">{% translate "Mestrado / Doutorado" %}</option>
+                    </select>
+                </div>
+                <!-- Tipo (EN) -->
+                <div class="flex flex-col gap-2 lang-en">
+                    <label class="font-bold text-gray-700">{% translate "Tipo de Formação (EN)" %}</label>
+                    <input 
+                        type="text"
+                        id="form_tipe_en" 
+                        class="bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:border-teal-600 text-gray-900"
+                        placeholder="Ex: Certification, Degree, Specialization"
+                    >
+                </div>
+                <!-- Certificado File -->
+                <div class="flex flex-col gap-2">
+                    <label class="font-bold text-gray-700">{% translate "Imagem do Certificado (Opcional)" %}</label>
+                    <div class="flex items-center gap-4">
+                        <label class="flex-grow border-2 border-dashed border-gray-300 rounded-xl p-3 bg-gray-50 hover:bg-gray-100 transition cursor-pointer flex flex-col items-center gap-1">
+                            <i class="fa-solid fa-file-arrow-up text-lg text-gray-400"></i>
+                            <span class="text-[10px] text-gray-500">{% translate "Selecionar imagem" %}</span>
+                            <input type="file" id="form_certificate" class="hidden" accept="image/*" onchange="previewCertificate(event)">
+                        </label>
+                        <div id="certificate_preview" class="w-16 h-16 border border-gray-300 rounded bg-gray-50 flex items-center justify-center overflow-hidden shrink-0 shadow">
+                            <i class="fa-solid fa-award text-gray-300 text-2xl"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Data de Início -->
+                <div class="flex flex-col gap-2">
+                    <label class="font-bold text-gray-700">{% translate "Data de Início" %} *</label>
+                    <input 
+                        type="date"
+                        id="form_ini_date"
+                        class="bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:border-teal-600 text-gray-900"
+                        required
+                    >
+                </div>
+                <!-- Data de Fim -->
+                <div class="flex flex-col gap-2">
+                    <label class="font-bold text-gray-700">{% translate "Data de Conclusão (Vazio se cursando)" %}</label>
+                    <input 
+                        type="date"
+                        id="form_end_date"
+                        class="bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:border-teal-600 text-gray-900"
+                    >
+                </div>
+            </div>
+
+            <!-- Footer da janela -->
+            <div class="flex justify-end gap-3 border-t border-gray-200 pt-4">
+                <button 
+                    type="button"
+                    onclick="closeModal()"
+                    class="px-5 py-2.5 rounded border border-gray-300 hover:bg-gray-200 transition font-bold cursor-pointer bg-white text-gray-700 text-xs shadow-sm"
+                >
+                    {% translate "Cancelar" %}
+                </button>
+                <button 
+                    id="save_form_btn"
+                    type="submit"
+                    class="px-5 py-2.5 rounded bg-teal-700 hover:bg-teal-800 text-white font-bold transition flex items-center gap-1.5 shadow-lg text-xs cursor-pointer"
+                >
+                    <i class="fa-solid fa-floppy-disk"></i> {% translate "Salvar Formação" %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- CONTAINER PRINCIPAL -->
+<div class="w-full max-w-4xl flex justify-center flex-col items-center gap-6 font-mono text-sm text-gray-800">
+
+    <!-- Barra de busca e botão novo -->
+    <div class="w-full bg-gray-100 rounded-lg shadow-xl p-3 flex justify-between items-center border border-teal-800">
+        <h2 class="text-base font-bold text-teal-900 flex items-center gap-2 px-2">
+            <i class="fa-solid fa-award"></i> {% translate "Cursos e Formações Acadêmicas" %}
+        </h2>
+        <div>
+            <button 
+                onclick="openModal()" 
+                class="bg-teal-700 text-white font-bold py-2 px-4 rounded-lg shadow-lg hover:bg-teal-800 cursor-pointer transition flex items-center gap-1.5 text-xs"
+            >
+                {% translate "Nova formação" %} <i class="fa-solid fa-plus"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Tabela de Listagem -->
+    <div id="div_table" class="w-full bg-gray-100 rounded-lg shadow-xl overflow-hidden border border-teal-800">
+        <table class="w-full text-left text-gray-700 text-xs">
+            <thead class="bg-gray-200 text-gray-800 uppercase border-b border-gray-300">
+                <tr>
+                    <th class="px-6 py-4 font-bold">{% translate "Curso / Diploma" %}</th>
+                    <th class="px-6 py-4 font-bold">{% translate "Instituição" %}</th>
+                    <th class="px-6 py-4 font-bold">{% translate "Período" %}</th>
+                    <th class="px-6 py-4 font-bold text-center">{% translate "Ações" %}</th>
+                </tr>
+            </thead>
+            <tbody id="formation_table_body">
+                <!-- Renderizado via JS -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script src="{% static 'js/adminFormation.js' %}"></script>
+{% endblock %}

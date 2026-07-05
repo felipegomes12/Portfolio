@@ -1,0 +1,193 @@
+{% extends "admin/base.html" %}
+{% load static %}
+{% load i18n %}
+{% block content %}
+<!-- MODAL DE EXPERIÊNCIA -->
+<div 
+    id="modal_experience"
+    class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-sm p-4 font-mono"
+>
+    <!-- modal box -->
+    <div class="w-full max-w-2xl bg-white rounded-2xl shadow-2xl border border-teal-800 flex flex-col font-mono text-sm text-gray-800">
+        
+        <!-- Header de janela de sistema -->
+        <div class="bg-gray-100 border-t-16 rounded-t-2xl border-l-16 border-b-8 border-r-8 p-4 flex justify-between items-center border-teal-800 sticky top-0 z-10">
+            <div>
+                <h2 id="modal_title" class="text-xl font-bold text-gray-900">
+                    {% translate "Nova Experiência" %}
+                </h2>
+                <p class="text-xs text-gray-500 mt-1">
+                    {% translate "Preencha os dados do cargo e da empresa" %}
+                </p>
+            </div>
+            <div class="flex items-center gap-3">
+                <div class="flex gap-1.5 mr-2">
+                    <div class="bg-blue-600 w-2.5 h-2.5 rounded-full"></div>
+                    <div class="bg-yellow-500 w-2.5 h-2.5 rounded-full"></div>
+                    <div class="bg-red-500 w-2.5 h-2.5 rounded-full"></div>
+                </div>
+                <button 
+                    class="w-8 h-8 rounded hover:bg-gray-200 transition cursor-pointer text-gray-600 flex items-center justify-center border border-gray-300 shadow-sm"
+                    onclick="closeModal()"
+                >
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Body Form -->
+        <form id="experience_form" onsubmit="saveExperience(event)" class="p-6 flex flex-col gap-5 bg-white rounded-b-2xl border-l-16 border-r-8 border-b-8 border-teal-800">
+            {% csrf_token %}
+            <input type="hidden" id="exp_id" value="">
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <!-- Cargo -->
+                <div class="flex flex-col gap-2 lang-pt">
+                    <label class="font-bold text-gray-700">{% translate "Cargo / Função" %} *</label>
+                    <input 
+                        type="text"
+                        id="exp_position"
+                        class="bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:border-teal-600 text-gray-900"
+                        placeholder="Ex: Administrador de Redes"
+                        required
+                    >
+                </div>
+                <!-- Cargo (EN) -->
+                <div class="flex flex-col gap-2 lang-en">
+                    <label class="font-bold text-gray-700">{% translate "Cargo / Função (EN)" %}</label>
+                    <input 
+                        type="text"
+                        id="exp_position_en"
+                        class="bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:border-teal-600 text-gray-900"
+                        placeholder="Ex: Network Administrator"
+                    >
+                </div>
+                <!-- Empresa -->
+                <div class="flex flex-col gap-2">
+                    <label class="font-bold text-gray-700">{% translate "Empresa / Instituição" %} *</label>
+                    <input 
+                        type="text"
+                        id="exp_work_place"
+                        class="bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:border-teal-600 text-gray-900"
+                        placeholder="Ex: Google LLC"
+                        required
+                    >
+                </div>
+            </div>
+
+            <!-- Descrição (Lado a Lado) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="flex flex-col gap-2 lang-pt">
+                    <label class="font-bold text-gray-700">{% translate "Descrição das Atividades" %} *</label>
+                    <textarea 
+                        rows="4"
+                        id="exp_description"
+                        class="bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 resize-none focus:outline-none focus:border-teal-600 text-gray-900"
+                        placeholder="{% translate 'Descreva suas responsabilidades e conquistas...' %}"
+                        required
+                    ></textarea>
+                </div>
+                <div class="flex flex-col gap-2 lang-en">
+                    <label class="font-bold text-gray-700">{% translate "Descrição das Atividades (EN)" %}</label>
+                    <textarea 
+                        rows="4"
+                        id="exp_description_en"
+                        class="bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 resize-none focus:outline-none focus:border-teal-600 text-gray-900"
+                        placeholder="Describe your responsibilities and achievements in English..."
+                    ></textarea>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Data de Início -->
+                <div class="flex flex-col gap-2">
+                    <label class="font-bold text-gray-700">{% translate "Data de Início" %} *</label>
+                    <input 
+                        type="date"
+                        id="exp_ini_date"
+                        class="bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:border-teal-600 text-gray-900"
+                        required
+                    >
+                </div>
+                <!-- Data de Fim -->
+                <div class="flex flex-col gap-2">
+                    <label class="font-bold text-gray-700">{% translate "Data de Término (Vazio se atual)" %}</label>
+                    <input 
+                        type="date"
+                        id="exp_end_date"
+                        class="bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:border-teal-600 text-gray-900"
+                    >
+                </div>
+            </div>
+
+            <!-- Tags -->
+            <div class="flex flex-col gap-2">
+                <label class="font-bold text-gray-700">{% translate "Tecnologias Utilizadas (Tags)" %}</label>
+                <input 
+                    type="text"
+                    id="exp_tags"
+                    class="bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:border-teal-600 text-gray-900"
+                    placeholder="Ex: Cisco, Linux, Python, Docker"
+                >
+                <span class="text-[10px] text-gray-500 font-bold">{% translate "Separadas por vírgula" %}</span>
+            </div>
+
+            <!-- Footer da janela -->
+            <div class="flex justify-end gap-3 border-t border-gray-200 pt-4">
+                <button 
+                    type="button"
+                    onclick="closeModal()"
+                    class="px-5 py-2.5 rounded border border-gray-300 hover:bg-gray-200 transition font-bold cursor-pointer bg-white text-gray-700 text-xs shadow-sm"
+                >
+                    {% translate "Cancelar" %}
+                </button>
+                <button 
+                    id="save_exp_btn"
+                    type="submit"
+                    class="px-5 py-2.5 rounded bg-teal-700 hover:bg-teal-800 text-white font-bold transition flex items-center gap-1.5 shadow-lg text-xs cursor-pointer"
+                >
+                    <i class="fa-solid fa-floppy-disk"></i> {% translate "Salvar Experiência" %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- CONTAINER PRINCIPAL -->
+<div class="w-full max-w-4xl flex justify-center flex-col items-center gap-6 font-mono text-sm text-gray-800">
+
+    <!-- Barra de busca e botão novo -->
+    <div class="w-full bg-gray-100 rounded-lg shadow-xl p-3 flex justify-between items-center border border-teal-800">
+        <h2 class="text-base font-bold text-teal-900 flex items-center gap-2 px-2">
+            <i class="fa-solid fa-briefcase"></i> {% translate "Histórico Profissional" %}
+        </h2>
+        <div>
+            <button 
+                onclick="openModal()" 
+                class="bg-teal-700 text-white font-bold py-2 px-4 rounded-lg shadow-lg hover:bg-teal-800 cursor-pointer transition flex items-center gap-1.5 text-xs"
+            >
+                {% translate "Nova experiência" %} <i class="fa-solid fa-plus"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Tabela de Listagem -->
+    <div id="div_table" class="w-full bg-gray-100 rounded-lg shadow-xl overflow-hidden border border-teal-800">
+        <table class="w-full text-left text-gray-700 text-xs">
+            <thead class="bg-gray-200 text-gray-800 uppercase border-b border-gray-300">
+                <tr>
+                    <th class="px-6 py-4 font-bold">{% translate "Cargo" %}</th>
+                    <th class="px-6 py-4 font-bold">{% translate "Empresa" %}</th>
+                    <th class="px-6 py-4 font-bold">{% translate "Período" %}</th>
+                    <th class="px-6 py-4 font-bold text-center">{% translate "Ações" %}</th>
+                </tr>
+            </thead>
+            <tbody id="experience_table_body">
+                <!-- Renderizado via JS -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script src="{% static 'js/adminExperience.js' %}"></script>
+{% endblock %}

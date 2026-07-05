@@ -1,0 +1,1530 @@
+openapi: 3.0.0
+
+info:
+  title: Portfolio API
+  version: 1.0.0
+  description: API interna do portfolio
+
+paths:
+
+  # --- Project Topics ---
+  /topics/create/:
+    post:
+      tags:
+        - Project Topics
+      summary: Criar tópicos do projeto
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - topics_title
+              properties:
+                topics_title:
+                  type: string
+                topics_title_en:
+                  type: string
+                topics:
+                  type: array
+                  items:
+                    type: string
+                topics_en:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: Criado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  id:
+                    type: integer
+        '400':
+          description: Dados inválidos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        '500':
+          description: Erro interno
+
+  /api/topics/{id}/update/:
+    put:
+      tags:
+        - Project Topics
+      summary: Atualizar tópicos
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                topics_title:
+                  type: string
+                topics_title_en:
+                  type: string
+                topics:
+                  type: array
+                  items:
+                    type: string
+                topics_en:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: Atualizado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '404':
+          description: Não encontrado
+        '500':
+          description: Erro interno
+
+  /api/topics/{id}/delete/:
+    delete:
+      tags:
+        - Project Topics
+      summary: Deletar tópicos
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Deletado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '404':
+          description: Não encontrado
+        '500':
+          description: Erro interno
+
+  /api/topics/list/:
+    get:
+      tags:
+        - Project Topics
+      summary: Listar tópicos do projeto
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+        - in: query
+          name: search
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lista de tópicos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        topics_title:
+                          type: string
+                        topics:
+                          type: array
+                          items:
+                            type: string
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+        '500':
+          description: Erro interno
+
+  /api/topics/details/{id}/:
+    get:
+      tags:
+        - Project Topics
+      summary: Detalhar tópico do projeto
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Dados do tópico
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  topics_title:
+                    type: string
+                  topics_title_en:
+                    type: string
+                  topics:
+                    type: array
+                    items:
+                      type: string
+                  topics_en:
+                    type: array
+                    items:
+                      type: string
+        '404':
+          description: Não encontrado
+        '500':
+          description: Erro interno
+
+
+  # --- Project Gallery ---
+  /gallery/create/:
+    post:
+      tags:
+        - Project Gallery
+      summary: Upload de imagem
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - img
+              properties:
+                img:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Upload realizado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  id:
+                    type: integer
+                  url:
+                    type: string
+        '400':
+          description: Dados inválidos
+        '500':
+          description: Erro interno
+
+  /api/gallery/{id}/update/:
+    post:
+      tags:
+        - Project Gallery
+      summary: Atualizar imagem
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                img:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Imagem atualizada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  url:
+                    type: string
+        '404':
+          description: Imagem não encontrada
+        '500':
+          description: Erro interno
+
+  /api/gallery/{id}/delete/:
+    delete:
+      tags:
+        - Project Gallery
+      summary: Deletar imagem
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Imagem deletada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '404':
+          description: Imagem não encontrada
+        '500':
+          description: Erro interno
+
+  /api/gallery/list/:
+    get:
+      tags:
+        - Project Gallery
+      summary: Listar imagens da galeria
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: Lista de imagens
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        img:
+                          type: string
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+        '500':
+          description: Erro interno
+
+  /api/gallery/details/{id}/:
+    get:
+      tags:
+        - Project Gallery
+      summary: Detalhar imagem da galeria
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Dados da imagem
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  img:
+                    type: string
+        '404':
+          description: Imagem não encontrada
+        '500':
+          description: Erro interno
+
+
+  # --- My Projects ---
+  /projects/create:
+    post:
+      tags:
+        - My Projects
+      summary: Criar projeto
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectCreateInputJSON'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProjectCreateInputMultipart'
+      responses:
+        '200':
+          description: Projeto criado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  id:
+                    type: integer
+        '400':
+          description: Dados inválidos
+        '500':
+          description: Erro interno
+
+  /api/projects/{id}/update/:
+    put:
+      tags:
+        - My Projects
+      summary: Atualizar projeto
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectUpdateInputJSON'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProjectUpdateInputMultipart'
+      responses:
+        '200':
+          description: Projeto atualizado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '404':
+          description: Projeto não encontrado
+        '500':
+          description: Erro interno
+
+  /api/projects/{id}/delete/:
+    delete:
+      tags:
+        - My Projects
+      summary: Deletar projeto
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Projeto deletado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '404':
+          description: Projeto não encontrado
+        '500':
+          description: Erro interno
+
+  /api/projects/list/:
+    get:
+      tags:
+        - My Projects
+      summary: Listar projetos
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+        - in: query
+          name: search
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lista de projetos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ProjectListOutput'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+        '500':
+          description: Erro interno
+
+  /api/project/details/{id}/:
+    get:
+      tags:
+        - My Projects
+      summary: Detalhar projeto
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Dados do projeto
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectDetailOutput'
+        '404':
+          description: Projeto não encontrado
+        '500':
+          description: Erro interno
+
+
+  # --- Profile ---
+  /api/profile/update/:
+    post:
+      tags:
+        - Profile
+      summary: Atualizar perfil do usuário
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                about_me:
+                  type: string
+                about_me_en:
+                  type: string
+                bio:
+                  type: string
+                bio_en:
+                  type: string
+                location:
+                  type: string
+                location_en:
+                  type: string
+                expertise:
+                  type: string
+                expertise_en:
+                  type: string
+                github_user:
+                  type: string
+                email:
+                  type: string
+                contact:
+                  type: string
+                linkedin_link:
+                  type: string
+                date_birth:
+                  type: string
+                  format: date
+                ini_date_exp:
+                  type: string
+                  format: date
+                clear_profile_img:
+                  type: string
+                  enum: ["true", "false"]
+                profile_img:
+                  type: string
+                  format: binary
+                tags:
+                  type: string
+                  description: Array JSON contendo IDs de tags, ex. "[1, 2]"
+                img_zoom:
+                  type: number
+                img_x:
+                  type: number
+                img_y:
+                  type: number
+      responses:
+        '200':
+          description: Perfil atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '500':
+          description: Erro interno
+
+
+  # --- Tags ---
+  /api/tags/create/:
+    post:
+      tags:
+        - Tags
+      summary: Criar nova tag (habilidade)
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - title
+              properties:
+                title:
+                  type: string
+                fontawesome_icon:
+                  type: string
+                  default: "fa-solid fa-code"
+      responses:
+        '200':
+          description: Tag criada com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  title:
+                    type: string
+                  fontawesome_icon:
+                    type: string
+        '400':
+          description: Dados inválidos
+        '500':
+          description: Erro interno
+
+
+  # --- Professional Experience ---
+  /api/experience/list/:
+    get:
+      tags:
+        - Experience
+      summary: Listar experiências profissionais
+      responses:
+        '200':
+          description: Lista de experiências
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ExperienceItem'
+        '500':
+          description: Erro interno
+
+  /api/experience/create/:
+    post:
+      tags:
+        - Experience
+      summary: Criar experiência profissional
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExperienceCreateInput'
+      responses:
+        '200':
+          description: Experiência criada com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  id:
+                    type: integer
+        '500':
+          description: Erro interno
+
+  /api/experience/{id}/update/:
+    put:
+      tags:
+        - Experience
+      summary: Atualizar experiência profissional
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExperienceUpdateInput'
+      responses:
+        '200':
+          description: Experiência atualizada com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '404':
+          description: Não encontrada
+        '500':
+          description: Erro interno
+
+  /api/experience/{id}/delete/:
+    delete:
+      tags:
+        - Experience
+      summary: Deletar experiência profissional
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Experiência deletada com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '404':
+          description: Não encontrada
+        '500':
+          description: Erro interno
+
+
+  # --- Formation ---
+  /api/formation/list/:
+    get:
+      tags:
+        - Formation
+      summary: Listar formações acadêmicas e certificados
+      responses:
+        '200':
+          description: Lista de formações
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/FormationItem'
+        '500':
+          description: Erro interno
+
+  /api/formation/create/:
+    post:
+      tags:
+        - Formation
+      summary: Criar formação acadêmica ou certificado
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FormationCreateInput'
+      responses:
+        '200':
+          description: Formação criada com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  id:
+                    type: integer
+        '500':
+          description: Erro interno
+
+  /api/formation/{id}/update/:
+    post:
+      tags:
+        - Formation
+      summary: Atualizar formação acadêmica ou certificado
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FormationUpdateInput'
+      responses:
+        '200':
+          description: Formação atualizada com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '404':
+          description: Não encontrada
+        '500':
+          description: Erro interno
+
+  /api/formation/{id}/delete/:
+    delete:
+      tags:
+        - Formation
+      summary: Deletar formação acadêmica
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Formação deletada com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '404':
+          description: Não encontrada
+        '500':
+          description: Erro interno
+
+
+  # --- Collaborators ---
+  /api/collaborators/list/:
+    get:
+      tags:
+        - Collaborators
+      summary: Listar colaboradores
+      responses:
+        '200':
+          description: Lista de colaboradores
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CollaboratorItem'
+        '500':
+          description: Erro interno
+
+  /api/collaborators/create/:
+    post:
+      tags:
+        - Collaborators
+      summary: Criar colaborador
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CollaboratorCreateInput'
+      responses:
+        '200':
+          description: Colaborador criado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  id:
+                    type: integer
+        '400':
+          description: Nome, biografia e área de atuação são obrigatórios
+        '500':
+          description: Erro interno
+
+  /api/collaborators/{id}/update/:
+    post:
+      tags:
+        - Collaborators
+      summary: Atualizar colaborador
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CollaboratorUpdateInput'
+      responses:
+        '200':
+          description: Colaborador atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '404':
+          description: Colaborador não encontrado
+        '500':
+          description: Erro interno
+
+  /api/collaborators/{id}/delete/:
+    delete:
+      tags:
+        - Collaborators
+      summary: Deletar colaborador
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Colaborador deletado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '404':
+          description: Colaborador não encontrado
+        '500':
+          description: Erro interno
+
+
+components:
+  schemas:
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+        pages:
+          type: integer
+        total:
+          type: integer
+        has_next:
+          type: boolean
+        has_previous:
+          type: boolean
+
+    # Schemas para MyProjects
+    ProjectCreateInputJSON:
+      type: object
+      required:
+        - project_title
+      properties:
+        project_title:
+          type: string
+        project_title_en:
+          type: string
+        project_description:
+          type: string
+        project_description_en:
+          type: string
+        project_tags:
+          type: array
+          items:
+            type: string
+        project_resorce_title:
+          type: string
+        project_resorce_title_en:
+          type: string
+        project_resorce_list:
+          type: array
+          items:
+            type: string
+        project_resorce_list_en:
+          type: array
+          items:
+            type: string
+        project_resorce_tags:
+          type: array
+          items:
+            type: string
+        project_resorce_tags_en:
+          type: array
+          items:
+            type: string
+        project_note:
+          type: string
+        project_note_en:
+          type: string
+        project_github_rep_link:
+          type: string
+        project_topics:
+          type: array
+          items:
+            type: integer
+        project_gallery:
+          type: array
+          items:
+            type: integer
+
+    ProjectCreateInputMultipart:
+      type: object
+      required:
+        - project_title
+      properties:
+        project_title:
+          type: string
+        project_title_en:
+          type: string
+        project_description:
+          type: string
+        project_description_en:
+          type: string
+        project_tags:
+          type: string
+          description: Lista separada por vírgula ou JSON string de tags
+        project_resorce_title:
+          type: string
+        project_resorce_title_en:
+          type: string
+        project_resorce_list:
+          type: string
+          description: Elementos separados por nova linha (\n)
+        project_resorce_list_en:
+          type: string
+          description: Elementos separados por nova linha (\n)
+        project_resorce_tags:
+          type: string
+          description: Elementos separados por nova linha (\n)
+        project_resorce_tags_en:
+          type: string
+          description: Elementos separados por nova linha (\n)
+        project_note:
+          type: string
+        project_note_en:
+          type: string
+        project_github_rep_link:
+          type: string
+        project_topics:
+          type: string
+          description: Array JSON de IDs de tópicos, ex. "[1, 2]"
+        project_gallery:
+          type: string
+          description: Array JSON de IDs de galeria, ex. "[3, 4]"
+        project_icon:
+          type: string
+          format: binary
+
+    ProjectUpdateInputJSON:
+      type: object
+      properties:
+        project_title:
+          type: string
+        project_title_en:
+          type: string
+        project_description:
+          type: string
+        project_description_en:
+          type: string
+        project_tags:
+          type: array
+          items:
+            type: string
+        project_resorce_title:
+          type: string
+        project_resorce_title_en:
+          type: string
+        project_resorce_list:
+          type: array
+          items:
+            type: string
+        project_resorce_list_en:
+          type: array
+          items:
+            type: string
+        project_resorce_tags:
+          type: array
+          items:
+            type: string
+        project_resorce_tags_en:
+          type: array
+          items:
+            type: string
+        project_note:
+          type: string
+        project_note_en:
+          type: string
+        project_github_rep_link:
+          type: string
+        project_topics:
+          type: array
+          items:
+            type: integer
+        project_gallery:
+          type: array
+          items:
+            type: integer
+
+    ProjectUpdateInputMultipart:
+      type: object
+      properties:
+        project_title:
+          type: string
+        project_title_en:
+          type: string
+        project_description:
+          type: string
+        project_description_en:
+          type: string
+        project_tags:
+          type: string
+          description: Lista separada por vírgula ou JSON string de tags
+        project_resorce_title:
+          type: string
+        project_resorce_title_en:
+          type: string
+        project_resorce_list:
+          type: string
+          description: Elementos separados por nova linha (\n)
+        project_resorce_list_en:
+          type: string
+          description: Elementos separados por nova linha (\n)
+        project_resorce_tags:
+          type: string
+          description: Elementos separados por nova linha (\n)
+        project_resorce_tags_en:
+          type: string
+          description: Elementos separados por nova linha (\n)
+        project_note:
+          type: string
+        project_note_en:
+          type: string
+        project_github_rep_link:
+          type: string
+        project_topics:
+          type: string
+          description: Array JSON de IDs de tópicos, ex. "[1, 2]"
+        project_gallery:
+          type: string
+          description: Array JSON de IDs de galeria, ex. "[3, 4]"
+        project_icon:
+          type: string
+          format: binary
+
+    ProjectListOutput:
+      type: object
+      properties:
+        id:
+          type: integer
+        project_icon:
+          type: string
+        project_title:
+          type: string
+        project_description:
+          type: string
+        project_tags:
+          type: array
+          items:
+            type: string
+        project_resorce_title:
+          type: string
+        project_resorce_list:
+          type: array
+          items:
+            type: string
+        project_resorce_tags:
+          type: array
+          items:
+            type: string
+        project_note:
+          type: string
+        project_github_rep_link:
+          type: string
+        project_topics:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              topics_title:
+                type: string
+              topics:
+                type: array
+                items:
+                  type: string
+        project_gallery:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              img:
+                type: string
+        add_on:
+          type: string
+          description: Formato "dd/mm/aaaa hh:mm:ss"
+
+    ProjectDetailOutput:
+      type: object
+      properties:
+        id:
+          type: integer
+        project_icon:
+          type: string
+        project_title:
+          type: string
+        project_title_en:
+          type: string
+        project_description:
+          type: string
+        project_description_en:
+          type: string
+        project_tags:
+          type: array
+          items:
+            type: string
+        project_resorce_title:
+          type: string
+        project_resorce_title_en:
+          type: string
+        project_resorce_list:
+          type: array
+          items:
+            type: string
+        project_resorce_list_en:
+          type: array
+          items:
+            type: string
+        project_resorce_tags:
+          type: array
+          items:
+            type: string
+        project_resorce_tags_en:
+          type: array
+          items:
+            type: string
+        project_note:
+          type: string
+        project_note_en:
+          type: string
+        project_github_rep_link:
+          type: string
+        project_topics:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              topics_title:
+                type: string
+              topics_title_en:
+                type: string
+              topics:
+                type: array
+                items:
+                  type: string
+              topics_en:
+                type: array
+                items:
+                  type: string
+        project_gallery:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              img:
+                type: string
+        add_on:
+          type: string
+          description: Formato "dd/mm/aaaa hh:mm:ss"
+
+    # Schema para Experience
+    ExperienceItem:
+      type: object
+      properties:
+        id:
+          type: integer
+        position:
+          type: string
+        position_en:
+          type: string
+        work_place:
+          type: string
+        description:
+          type: string
+        description_en:
+          type: string
+        ini_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        tags:
+          type: string
+
+    ExperienceCreateInput:
+      type: object
+      properties:
+        position:
+          type: string
+        position_en:
+          type: string
+        work_place:
+          type: string
+        description:
+          type: string
+        description_en:
+          type: string
+        ini_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        tags:
+          type: string
+
+    ExperienceUpdateInput:
+      type: object
+      properties:
+        position:
+          type: string
+        position_en:
+          type: string
+        work_place:
+          type: string
+        description:
+          type: string
+        description_en:
+          type: string
+        ini_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        tags:
+          type: string
+
+    # Schema para Formation
+    FormationItem:
+      type: object
+      properties:
+        id:
+          type: integer
+        tipe:
+          type: string
+        tipe_en:
+          type: string
+        title:
+          type: string
+        title_en:
+          type: string
+        institution:
+          type: string
+        ini_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        certificate:
+          type: string
+
+    FormationCreateInput:
+      type: object
+      properties:
+        tipe:
+          type: string
+        tipe_en:
+          type: string
+        title:
+          type: string
+        title_en:
+          type: string
+        institution:
+          type: string
+        ini_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        certificate:
+          type: string
+          format: binary
+
+    FormationUpdateInput:
+      type: object
+      properties:
+        tipe:
+          type: string
+        tipe_en:
+          type: string
+        title:
+          type: string
+        title_en:
+          type: string
+        institution:
+          type: string
+        ini_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        certificate:
+          type: string
+          format: binary
+
+    # Schema para Collaborators
+    CollaboratorItem:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        bio:
+          type: string
+        bio_en:
+          type: string
+        photo:
+          type: string
+        portfolio_link:
+          type: string
+        github_link:
+          type: string
+        role:
+          type: string
+        role_en:
+          type: string
+
+    CollaboratorCreateInput:
+      type: object
+      required:
+        - name
+        - bio
+        - role
+      properties:
+        name:
+          type: string
+        bio:
+          type: string
+        bio_en:
+          type: string
+        portfolio_link:
+          type: string
+        github_link:
+          type: string
+        role:
+          type: string
+        role_en:
+          type: string
+        photo:
+          type: string
+          format: binary
+
+    CollaboratorUpdateInput:
+      type: object
+      properties:
+        name:
+          type: string
+        bio:
+          type: string
+        bio_en:
+          type: string
+        portfolio_link:
+          type: string
+          nullable: true
+        github_link:
+          type: string
+          nullable: true
+        role:
+          type: string
+        role_en:
+          type: string
+        clear_photo:
+          type: string
+          enum: ["true", "false"]
+        photo:
+          type: string
+          format: binary

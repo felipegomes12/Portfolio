@@ -1,0 +1,184 @@
+{% extends "admin/base.html" %}
+{% load static %}
+{% load i18n %}
+{% block content %}
+<div class="max-w-4xl w-full px-6 py-10 font-mono text-gray-800 flex flex-col gap-8">
+
+    <!-- Janela de Boas-vindas -->
+    <div class="w-full flex flex-col">
+        <!-- Barra de Janela -->
+        <div
+            class="bg-gray-100 border-t-16 rounded-t-lg border-l-16 border-b-8 border-r-8 shadow-xl p-3 flex justify-between items-center border-teal-800">
+            <h1 class="text-md font-bold text-gray-900 flex items-center gap-2">
+                <i class="fa-solid fa-terminal text-teal-600"></i> dashboard://admin/welcome.sh
+            </h1>
+            <div class="flex gap-2">
+                <div class="bg-blue-600 w-3 h-3 rounded-full"></div>
+                <div class="bg-yellow-500 w-3 h-3 rounded-full"></div>
+                <div class="bg-red-500 w-3 h-3 rounded-full"></div>
+            </div>
+        </div>
+        <!-- Conteúdo -->
+        <div
+            class="p-8 rounded-b-lg border-l-16 border-r-8 border-b-8 shadow-xl bg-gray-100 border-teal-800 flex flex-col gap-4">
+            <h2 class="text-2xl font-bold text-gray-900">{% translate "Olá, Administrador!" %}</h2>
+            <p class="text-sm text-gray-600 leading-relaxed">
+                {% translate "Bem-vindo ao painel de controle do seu portfólio. A partir daqui, você pode gerenciar suas informações de perfil, competências técnicas, experiências de trabalho, formação acadêmica e portfólio de projetos dinamicamente." %}
+            </p>
+        </div>
+    </div>
+
+    <!-- Grid de Estatísticas (Estilo Retro) -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+        <!-- Projetos -->
+        <div class="flex flex-col">
+            <div class="bg-gray-100 border-t-16 rounded-t-lg border-l-16 border-b-8 border-r-8 shadow-md p-2 flex justify-between items-center border-teal-800">
+                <span class="text-xs font-bold text-gray-900">projetos.db</span>
+                <div class="bg-teal-600 w-2.5 h-2.5 rounded-full"></div>
+            </div>
+            <div class="p-6 rounded-b-lg border-l-16 border-r-8 border-b-8 shadow-md bg-gray-100 border-teal-800 flex items-center justify-between">
+                <div>
+                    <span class="text-xs text-gray-500 block uppercase font-bold">{% translate "Projetos" %}</span>
+                    <span class="text-3xl font-extrabold text-teal-900">{{ stats.projects_count }}</span>
+                </div>
+                <div class="text-teal-600 text-3xl">
+                    <i class="fa-solid fa-folder-open"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Experiências -->
+        <div class="flex flex-col">
+            <div class="bg-gray-100 border-t-16 rounded-t-lg border-l-16 border-b-8 border-r-8 shadow-md p-2 flex justify-between items-center border-teal-800">
+                <span class="text-xs font-bold text-gray-900">exp.db</span>
+                <div class="bg-teal-600 w-2.5 h-2.5 rounded-full"></div>
+            </div>
+            <div class="p-6 rounded-b-lg border-l-16 border-r-8 border-b-8 shadow-md bg-gray-100 border-teal-800 flex items-center justify-between">
+                <div>
+                    <span class="text-xs text-gray-500 block uppercase font-bold">{% translate "Experiências" %}</span>
+                    <span class="text-3xl font-extrabold text-teal-900">{{ stats.experience_count }}</span>
+                </div>
+                <div class="text-teal-600 text-3xl">
+                    <i class="fa-solid fa-briefcase"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Formações -->
+        <div class="flex flex-col">
+            <div class="bg-gray-100 border-t-16 rounded-t-lg border-l-16 border-b-8 border-r-8 shadow-md p-2 flex justify-between items-center border-teal-800">
+                <span class="text-xs font-bold text-gray-900">educacao.db</span>
+                <div class="bg-teal-600 w-2.5 h-2.5 rounded-full"></div>
+            </div>
+            <div class="p-6 rounded-b-lg border-l-16 border-r-8 border-b-8 shadow-md bg-gray-100 border-teal-800 flex items-center justify-between">
+                <div>
+                    <span class="text-xs text-gray-500 block uppercase font-bold">{% translate "Certificações" %}</span>
+                    <span class="text-3xl font-extrabold text-teal-900">{{ stats.formation_count }}</span>
+                </div>
+                <div class="text-teal-600 text-3xl">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Colaboradores -->
+        <div class="flex flex-col">
+            <div class="bg-gray-100 border-t-16 rounded-t-lg border-l-16 border-b-8 border-r-8 shadow-md p-2 flex justify-between items-center border-teal-800">
+                <span class="text-xs font-bold text-gray-900">colab.db</span>
+                <div class="bg-teal-600 w-2.5 h-2.5 rounded-full"></div>
+            </div>
+            <div class="p-6 rounded-b-lg border-l-16 border-r-8 border-b-8 shadow-md bg-gray-100 border-teal-800 flex items-center justify-between">
+                <div>
+                    <span class="text-xs text-gray-500 block uppercase font-bold">{% translate "Colaboradores" %}</span>
+                    <span class="text-3xl font-extrabold text-teal-900">{{ stats.collaborators_count }}</span>
+                </div>
+                <div class="text-teal-600 text-3xl">
+                    <i class="fa-solid fa-users"></i>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Atalhos Rápidos de Gerenciamento -->
+    <div class="w-full flex flex-col">
+        <div
+            class="bg-gray-100 border-t-16 rounded-t-lg border-l-16 border-b-8 border-r-8 shadow-xl p-3 flex justify-between items-center border-teal-800">
+            <h3 class="text-md font-bold text-gray-900 flex items-center gap-2">
+                <i class="fa-solid fa-gears text-teal-600"></i> acoes_rapidas.bat
+            </h3>
+            <div class="flex gap-2">
+                <div class="bg-blue-600 w-3 h-3 rounded-full"></div>
+                <div class="bg-yellow-500 w-3 h-3 rounded-full"></div>
+                <div class="bg-red-500 w-3 h-3 rounded-full"></div>
+            </div>
+        </div>
+        <div
+            class="p-6 rounded-b-lg border-l-16 border-r-8 border-b-8 shadow-xl bg-gray-100 border-teal-800 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+
+            <a href="/panel/admin/projects/"
+                class="bg-white hover:bg-gray-50 p-4 rounded-lg border border-gray-300 shadow flex items-center gap-4 transition group">
+                <div
+                    class="w-12 h-12 rounded bg-teal-100 text-teal-800 flex items-center justify-center text-xl shrink-0 group-hover:scale-105 transition">
+                    <i class="fa-solid fa-puzzle-piece"></i>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-900 text-sm">{% translate "Gerenciar Projetos" %}</h4>
+                    <p class="text-xs text-gray-500 mt-1">{% translate "Crie, edite ou remova os seus projetos e tópicos do portfólio." %}</p>
+                </div>
+            </a>
+
+            <a href="/panel/admin/profile/"
+                class="bg-white hover:bg-gray-50 p-4 rounded-lg border border-gray-300 shadow flex items-center gap-4 transition group">
+                <div
+                    class="w-12 h-12 rounded bg-teal-100 text-teal-800 flex items-center justify-center text-xl shrink-0 group-hover:scale-105 transition">
+                    <i class="fa-solid fa-user-gear"></i>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-900 text-sm">{% translate "Editar Perfil" %}</h4>
+                    <p class="text-xs text-gray-500 mt-1">{% translate "Atualize sua foto, bio, competências e links de redes sociais." %}</p>
+                </div>
+            </a>
+
+            <a href="/panel/admin/experience/"
+                class="bg-white hover:bg-gray-50 p-4 rounded-lg border border-gray-300 shadow flex items-center gap-4 transition group">
+                <div
+                    class="w-12 h-12 rounded bg-teal-100 text-teal-800 flex items-center justify-center text-xl shrink-0 group-hover:scale-105 transition">
+                    <i class="fa-solid fa-briefcase"></i>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-900 text-sm">{% translate "Histórico Profissional" %}</h4>
+                    <p class="text-xs text-gray-500 mt-1">{% translate "Insira e remova cargos, datas e descrições de sua carreira." %}</p>
+                </div>
+            </a>
+
+            <a href="/panel/admin/formation/"
+                class="bg-white hover:bg-gray-50 p-4 rounded-lg border border-gray-300 shadow flex items-center gap-4 transition group">
+                <div
+                    class="w-12 h-12 rounded bg-teal-100 text-teal-800 flex items-center justify-center text-xl shrink-0 group-hover:scale-105 transition">
+                    <i class="fa-solid fa-award"></i>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-900 text-sm">{% translate "Cursos e Certificações" %}</h4>
+                    <p class="text-xs text-gray-500 mt-1">{% translate "Cadastre diplomas, faculdade, cursos livres e envie certificados." %}</p>
+                </div>
+            </a>
+
+            <a href="/panel/admin/collaborators/"
+                class="bg-white hover:bg-gray-50 p-4 rounded-lg border border-gray-300 shadow flex items-center gap-4 transition group">
+                <div
+                    class="w-12 h-12 rounded bg-teal-100 text-teal-800 flex items-center justify-center text-xl shrink-0 group-hover:scale-105 transition">
+                    <i class="fa-solid fa-users"></i>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-900 text-sm">{% translate "Colaboradores" %}</h4>
+                    <p class="text-xs text-gray-500 mt-1">{% translate "Gerencie os dados das pessoas com quem você trabalha." %}</p>
+                </div>
+            </a>
+
+        </div>
+    </div>
+
+</div>
+{% endblock %}

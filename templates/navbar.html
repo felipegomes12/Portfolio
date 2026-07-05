@@ -1,0 +1,36 @@
+{% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
+<nav class="main-nav sticky top-0 z-50 w-full px-6 py-4 font-mono">
+    <div class="w-full flex items-center rounded-md justify-between bg-gray-100 px-6 py-2 shadow-4xl border border-teal-800/10">
+
+        <div class="flex gap-4">
+            <a href="#inicio" class="text-md hover:shadow-2xl hover:text-emerald-500 hover:shadow-emerald-500 font-semibold px-4 py-2 border-b-4 border-transparent hover:border-emerald-500 hover:bg-gray-200 transition">
+                {% translate "Início" %} <i class="fa-solid fa-house"></i>
+            </a>
+            <a href="#projetos" class="text-md hover:shadow-2xl hover:text-emerald-500 hover:shadow-emerald-500 font-semibold px-4 py-2 border-b-4 border-transparent hover:border-emerald-500 hover:bg-gray-200 transition">
+                {% translate "Projetos" %} <i class="fa-solid fa-puzzle-piece"></i>
+            </a>
+            <a href="#sobre" class="text-md hover:shadow-2xl hover:text-emerald-500 hover:shadow-emerald-500 font-semibold px-4 py-2 border-b-4 border-transparent hover:border-emerald-500 hover:bg-gray-200 transition">
+                {% translate "Sobre mim" %} <i class="fa-solid fa-user"></i>
+            </a>
+            <a href="#colaboradores" class="text-md hover:shadow-2xl hover:text-emerald-500 hover:shadow-emerald-500 font-semibold px-4 py-2 border-b-4 border-transparent hover:border-emerald-500 hover:bg-gray-200 transition">
+                {% translate "Colaboradores" %} <i class="fa-solid fa-users"></i>
+            </a>
+            <a href="#contato" class="text-md hover:shadow-2xl hover:text-emerald-500 hover:shadow-emerald-500 font-semibold px-4 py-2 border-b-4 border-transparent hover:border-emerald-500 hover:bg-gray-200 transition">
+                {% translate "Contatos" %} <i class="fa-solid fa-address-card"></i>
+            </a>
+        </div>
+
+        <div>
+            <form action="{% url 'set_language' %}" method="post" class="inline">
+                {% csrf_token %}
+                <input name="next" type="hidden" value="{{ request.path }}">
+                <select name="language" onchange="this.form.submit()" class="bg-gray-100 hover:shadow-2xl focus:text-gray-900 hover:shadow-emerald-500 hover:text-emerald-500 px-3 py-2 border-b-4 border-transparent hover:border-emerald-500 font-semibold focus:outline-none hover:bg-gray-200 cursor-pointer">
+                    <option value="pt-br" {% if LANGUAGE_CODE == 'pt-br' %}selected{% endif %}>PT-BR</option>
+                    <option value="en" {% if LANGUAGE_CODE|slice:":2" == 'en' %}selected{% endif %}>EN</option>
+                </select>
+            </form>
+        </div>
+
+    </div>
+</nav>
