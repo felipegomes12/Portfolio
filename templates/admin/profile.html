@@ -45,8 +45,7 @@
                     <label class="font-bold text-gray-700">{% translate "Especialidade / Cargo (EN)" %}</label>
                     <input type="text" id="expertise_en"
                         class="bg-white border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:border-teal-600 text-gray-900"
-                        value="{{ profile.expertise_en|default:'' }}"
-                        placeholder="Ex: IT Infrastructure Specialist">
+                        value="{{ profile.expertise_en|default:'' }}" placeholder="Ex: IT Infrastructure Specialist">
                 </div>
             </div>
 
@@ -156,7 +155,8 @@
                     <label
                         class="flex-grow border-2 border-dashed border-gray-300 rounded-xl p-6 bg-gray-50 hover:bg-gray-100 transition cursor-pointer flex flex-col items-center gap-2">
                         <i class="fa-solid fa-image-portrait text-3xl text-gray-400"></i>
-                        <span class="text-xs text-gray-500">{% translate "Selecione uma imagem quadrada de retrato" %}</span>
+                        <span class="text-xs text-gray-500">{% translate "Selecione uma imagem quadrada de retrato"
+                            %}</span>
                         <input type="file" id="profile_img" class="hidden" accept="image/*"
                             onchange="previewProfileImage(event)">
                     </label>
@@ -164,13 +164,16 @@
                         <div id="profile_img_preview"
                             class="w-24 h-24 rounded-full border border-gray-300 bg-gray-50 flex items-center justify-center overflow-hidden shrink-0 shadow">
                             {% if profile.profile_img %}
-                            <img id="profile_img_tag" src="{{ profile.profile_img.url }}" class="min-w-full min-h-full w-auto h-auto max-w-none max-h-none block" style="transform: scale({{ profile.img_zoom|default:1.0|unlocalize }}) translate({{ profile.img_x|default:0.0|unlocalize }}px, {{ profile.img_y|default:0.0|unlocalize }}px); transform-origin: center;">
+                            <img id="profile_img_tag" src="{{ profile.profile_img.url }}"
+                                class="min-w-full min-h-full w-auto h-auto max-w-none max-h-none block"
+                                style="transform: scale({{ profile.img_zoom|default:1.0|unlocalize }}) translate({{ profile.img_x|default:0.0|unlocalize }}px, {{ profile.img_y|default:0.0|unlocalize }}px); transform-origin: center;">
                             {% else %}
                             <i id="profile_icon_placeholder" class="fa-solid fa-user-ninja text-gray-300 text-4xl"></i>
                             {% endif %}
                         </div>
                         {% if profile.profile_img %}
-                        <button type="button" id="remove_photo_btn" onclick="clearProfileImage()" class="text-[10px] text-red-600 hover:text-red-800 font-bold font-mono transition cursor-pointer mt-1">
+                        <button type="button" id="remove_photo_btn" onclick="clearProfileImage()"
+                            class="text-[10px] text-red-600 hover:text-red-800 font-bold font-mono transition cursor-pointer mt-1">
                             <i class="fa-solid fa-trash-can"></i> {% translate "Remover Foto" %}
                         </button>
                         {% endif %}
@@ -180,104 +183,127 @@
                 <!-- Sliders de Ajuste -->
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-2 p-4 border border-gray-300 rounded bg-gray-50">
                     <div class="flex flex-col gap-1">
-                        <label class="font-bold text-[10px] text-gray-600 font-mono">Zoom (<span id="zoom_val">{{ profile.img_zoom|default:1.0|unlocalize }}</span>x)</label>
-                        <input type="range" id="img_zoom" min="0.5" max="3" step="0.05" value="{{ profile.img_zoom|default:1.0|unlocalize }}" class="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-teal-700" oninput="updateImageTransform()">
+                        <label class="font-bold text-[10px] text-gray-600 font-mono">Zoom (<span id="zoom_val">{{
+                                profile.img_zoom|default:1.0|unlocalize }}</span>x)</label>
+                        <input type="range" id="img_zoom" min="0.5" max="3" step="0.05"
+                            value="{{ profile.img_zoom|default:1.0|unlocalize }}"
+                            class="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-teal-700"
+                            oninput="updateImageTransform()">
                     </div>
                     <div class="flex flex-col gap-1">
-                        <label class="font-bold text-[10px] text-gray-600 font-mono">{% translate "Deslocamento X" %} (<span id="x_val">{{ profile.img_x|default:0.0|unlocalize }}</span>px)</label>
-                        <input type="range" id="img_x" min="-100" max="100" step="1" value="{{ profile.img_x|default:0.0|unlocalize }}" class="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-teal-700" oninput="updateImageTransform()">
+                        <label class="font-bold text-[10px] text-gray-600 font-mono">{% translate "Deslocamento X" %}
+                            (<span id="x_val">{{ profile.img_x|default:0.0|unlocalize }}</span>px)</label>
+                        <input type="range" id="img_x" min="-100" max="100" step="1"
+                            value="{{ profile.img_x|default:0.0|unlocalize }}"
+                            class="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-teal-700"
+                            oninput="updateImageTransform()">
                     </div>
                     <div class="flex flex-col gap-1">
-                        <label class="font-bold text-[10px] text-gray-600 font-mono">{% translate "Deslocamento Y" %} (<span id="y_val">{{ profile.img_y|default:0.0|unlocalize }}</span>px)</label>
-                        <input type="range" id="img_y" min="-100" max="100" step="1" value="{{ profile.img_y|default:0.0|unlocalize }}" class="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-teal-700" oninput="updateImageTransform()">
+                        <label class="font-bold text-[10px] text-gray-600 font-mono">{% translate "Deslocamento Y" %}
+                            (<span id="y_val">{{ profile.img_y|default:0.0|unlocalize }}</span>px)</label>
+                        <input type="range" id="img_y" min="-100" max="100" step="1"
+                            value="{{ profile.img_y|default:0.0|unlocalize }}"
+                            class="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-teal-700"
+                            oninput="updateImageTransform()">
                     </div>
                 </div>
-            <!-- Upload do Currículo (CV) -->
-            <div class="flex flex-col gap-2 border-t border-gray-200 pt-4">
-                <label class="font-bold text-gray-700 font-mono">{% translate "Currículo (PDF, DOCX, etc.)" %}</label>
-                <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                    <label
-                        class="flex-grow border-2 border-dashed border-gray-300 rounded-xl p-4 bg-gray-50 hover:bg-gray-100 transition cursor-pointer flex flex-col items-center gap-1.5">
-                        <i class="fa-solid fa-file-arrow-up text-2xl text-gray-400"></i>
-                        <span class="text-xs text-gray-500" id="resume_filename_label">{% translate "Selecione o arquivo do currículo" %}</span>
-                        <input type="file" id="resume" class="hidden" accept=".pdf,.doc,.docx"
-                            onchange="previewResumeFile(event)">
-                    </label>
-                    
-                    <div class="flex flex-col gap-1 w-full sm:w-auto">
-                        <div id="resume_status_container" class="text-xs font-mono text-gray-600 bg-white border border-gray-300 rounded p-3 flex flex-col gap-2 min-w-[200px]">
-                            <div>
-                                <span class="font-bold">{% translate "Status:" %}</span>
-                                <span id="resume_status_text">
-                                    {% if profile.resume %}
-                                    <a href="{{ profile.resume.url }}" target="_blank" class="text-teal-700 underline font-bold hover:text-teal-800">
-                                        <i class="fa-solid fa-download"></i> {% translate "Ver Currículo" %}
-                                    </a>
-                                    {% else %}
-                                    <span class="text-gray-400 italic">{% translate "Nenhum arquivo" %}</span>
-                                    {% endif %}
-                                </span>
+                <!-- Upload do Currículo (CV) -->
+                <div class="flex flex-col gap-2 border-t border-gray-200 pt-4">
+                    <label class="font-bold text-gray-700 font-mono">{% translate "Currículo (PDF, DOCX, etc.)"
+                        %}</label>
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                        <label
+                            class="flex-grow border-2 border-dashed border-gray-300 rounded-xl p-4 bg-gray-50 hover:bg-gray-100 transition cursor-pointer flex flex-col items-center gap-1.5">
+                            <i class="fa-solid fa-file-arrow-up text-2xl text-gray-400"></i>
+                            <span class="text-xs text-gray-500" id="resume_filename_label">{% translate "Selecione o
+                                arquivo do currículo" %}</span>
+                            <input type="file" id="resume" class="hidden" accept=".pdf,.doc,.docx"
+                                onchange="previewResumeFile(event)">
+                        </label>
+
+                        <div class="flex flex-col gap-1 w-full sm:w-auto">
+                            <div id="resume_status_container"
+                                class="text-xs font-mono text-gray-600 bg-white border border-gray-300 rounded p-3 flex flex-col gap-2 min-w-[200px]">
+                                <div>
+                                    <span class="font-bold">{% translate "Status:" %}</span>
+                                    <span id="resume_status_text">
+                                        {% if profile.resume %}
+                                        <a href="{{ profile.resume.url }}" target="_blank"
+                                            class="text-teal-700 underline font-bold hover:text-teal-800">
+                                            <i class="fa-solid fa-download"></i> {% translate "Ver Currículo" %}
+                                        </a>
+                                        {% else %}
+                                        <span class="text-gray-400 italic">{% translate "Nenhum arquivo" %}</span>
+                                        {% endif %}
+                                    </span>
+                                </div>
+                                {% if profile.resume %}
+                                <button type="button" id="remove_resume_btn" onclick="clearResumeFile()"
+                                    class="text-left text-[10px] text-red-600 hover:text-red-800 font-bold font-mono transition cursor-pointer mt-1">
+                                    <i class="fa-solid fa-trash-can"></i> {% translate "Remover Currículo" %}
+                                </button>
+                                {% endif %}
                             </div>
-                            {% if profile.resume %}
-                            <button type="button" id="remove_resume_btn" onclick="clearResumeFile()" class="text-left text-[10px] text-red-600 hover:text-red-800 font-bold font-mono transition cursor-pointer mt-1">
-                                <i class="fa-solid fa-trash-can"></i> {% translate "Remover Currículo" %}
-                            </button>
-                            {% endif %}
                         </div>
                     </div>
+                    <input type="hidden" id="clear_resume" value="false">
                 </div>
-                <input type="hidden" id="clear_resume" value="false">
-            </div>
 
-            <!-- Escolha de Skills/Tags (ManyToMany) -->
-            <div class="flex flex-col gap-2 border-t border-gray-200 pt-4">
-                <label class="font-bold text-gray-700 font-mono mb-2">{% translate "Competências / Tecnologias (Skills)" %}</label>
-                <div id="skills_checkbox_container"
-                    class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 p-4 border border-gray-300 rounded bg-white max-h-48 overflow-y-auto">
-                    {% for tag in tags %}
-                    <label class="flex items-center gap-2 text-xs font-bold cursor-pointer hover:text-teal-700">
-                        <input type="checkbox" name="tag_checkboxes" value="{{ tag.id }}" {% if tag in profile.tags.all %}checked{% endif %} class="rounded text-teal-600 focus:ring-teal-500 cursor-pointer">
-                        <i class="{{ tag.fontawesome_icon }} text-base text-gray-500 w-5 text-center"></i>
-                        <span>{{ tag.title }}</span>
-                    </label>
-                    {% empty %}
-                    <p class="text-gray-500 italic col-span-full text-xs" id="no_skills_msg">{% translate "Nenhuma tag cadastrada no banco." %}</p>
-                    {% endfor %}
+                <!-- Escolha de Skills/Tags (ManyToMany) -->
+                <div class="flex flex-col gap-2 border-t border-gray-200 pt-4">
+                    <label class="font-bold text-gray-700 font-mono mb-2">{% translate "Competências / Tecnologias
+                        (Skills)" %}</label>
+                    <div id="skills_checkbox_container"
+                        class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 p-4 border border-gray-300 rounded bg-white max-h-48 overflow-y-auto">
+                        {% for tag in tags %}
+                        <label class="flex items-center gap-2 text-xs font-bold cursor-pointer hover:text-teal-700">
+                            <input type="checkbox" name="tag_checkboxes" value="{{ tag.id }}" {% if tag in
+                                profile.tags.all %}checked{% endif %}
+                                class="rounded text-teal-600 focus:ring-teal-500 cursor-pointer">
+                            <i class="{{ tag.fontawesome_icon }} text-base text-gray-500 w-5 text-center"></i>
+                            <span>{{ tag.title }}</span>
+                        </label>
+                        {% empty %}
+                        <p class="text-gray-500 italic col-span-full text-xs" id="no_skills_msg">{% translate "Nenhuma
+                            tag cadastrada no banco." %}</p>
+                        {% endfor %}
+                    </div>
+                    <!-- Nova Tag Direta -->
+                    <div
+                        class="flex flex-col sm:flex-row gap-3 items-end mt-3 p-4 border border-gray-300 rounded bg-gray-50">
+                        <div class="flex flex-col gap-1 flex-grow w-full">
+                            <label class="font-bold text-[10px] text-gray-600 font-mono">{% translate "Nome da Skill" %}
+                                *</label>
+                            <input type="text" id="new_tag_title"
+                                class="bg-white border border-gray-300 rounded px-3 py-1.5 focus:outline-none focus:border-teal-600 text-gray-900 text-xs font-mono"
+                                placeholder="Ex: Docker">
+                        </div>
+                        <div class="flex flex-col gap-1 flex-grow w-full">
+                            <label class="font-bold text-[10px] text-gray-600 font-mono">{% translate "Classe
+                                FontAwesome (Opcional)" %}</label>
+                            <input type="text" id="new_tag_icon"
+                                class="bg-white border border-gray-300 rounded px-3 py-1.5 focus:outline-none focus:border-teal-600 text-gray-900 text-xs font-mono"
+                                placeholder="Ex: fa-brands fa-docker">
+                        </div>
+                        <button type="button" onclick="createNewTag()"
+                            class="px-4 py-2 bg-teal-700 text-white font-bold rounded text-xs hover:bg-teal-800 cursor-pointer flex items-center gap-1.5 shrink-0 w-full sm:w-auto justify-center font-mono transition">
+                            <i class="fa-solid fa-plus"></i> {% translate "Criar Skill" %}
+                        </button>
+                    </div>
                 </div>
-                <!-- Nova Tag Direta -->
-                <div
-                    class="flex flex-col sm:flex-row gap-3 items-end mt-3 p-4 border border-gray-300 rounded bg-gray-50">
-                    <div class="flex flex-col gap-1 flex-grow w-full">
-                        <label class="font-bold text-[10px] text-gray-600 font-mono">{% translate "Nome da Skill" %} *</label>
-                        <input type="text" id="new_tag_title"
-                            class="bg-white border border-gray-300 rounded px-3 py-1.5 focus:outline-none focus:border-teal-600 text-gray-900 text-xs font-mono"
-                            placeholder="Ex: Docker">
-                    </div>
-                    <div class="flex flex-col gap-1 flex-grow w-full">
-                        <label class="font-bold text-[10px] text-gray-600 font-mono">{% translate "Classe FontAwesome (Opcional)" %}</label>
-                        <input type="text" id="new_tag_icon"
-                            class="bg-white border border-gray-300 rounded px-3 py-1.5 focus:outline-none focus:border-teal-600 text-gray-900 text-xs font-mono"
-                            placeholder="Ex: fa-brands fa-docker">
-                    </div>
-                    <button type="button" onclick="createNewTag()"
-                        class="px-4 py-2 bg-teal-700 text-white font-bold rounded text-xs hover:bg-teal-800 cursor-pointer flex items-center gap-1.5 shrink-0 w-full sm:w-auto justify-center font-mono transition">
-                        <i class="fa-solid fa-plus"></i> {% translate "Criar Skill" %}
+
+                <!-- Botão de Ação -->
+                <div class="flex justify-end gap-3 border-t border-gray-200 pt-6">
+                    <button id="save_profile_btn" type="submit"
+                        class="px-6 py-3 rounded bg-teal-700 hover:bg-teal-800 text-white font-bold transition flex items-center gap-1.5 shadow-lg text-xs cursor-pointer">
+                        <i class="fa-solid fa-floppy-disk"></i> {% translate "Salvar Perfil" %}
                     </button>
                 </div>
-            </div>
-
-            <!-- Botão de Ação -->
-            <div class="flex justify-end gap-3 border-t border-gray-200 pt-6">
-                <button id="save_profile_btn" type="submit"
-                    class="px-6 py-3 rounded bg-teal-700 hover:bg-teal-800 text-white font-bold transition flex items-center gap-1.5 shadow-lg text-xs cursor-pointer">
-                    <i class="fa-solid fa-floppy-disk"></i> {% translate "Salvar Perfil" %}
-                </button>
-            </div>
 
         </form>
     </div>
 
 </div>
 
-<script src="{% static 'js/adminProfile.js' %}"></script>
+<script src="{% static 'js/adminProfile.js' %}?v=2.0"></script>
 {% endblock %}
