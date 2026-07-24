@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", function() {
 // Listar Formações
 function fetchFormations() {
     const tbody = document.getElementById("formation_table_body");
-    if (tbody) tbody.innerHTML = `<tr><td colspan="4" class="px-6 py-6 text-center text-gray-500 italic">Carregando formações...</td></tr>`;
+    if (tbody) tbody.innerHTML = `<tr><td colspan="5" class="px-6 py-6 text-center text-gray-500 italic">Carregando formações...</td></tr>`;
 
     fetch("/api/formation/list/")
         .then(res => res.json())
@@ -38,7 +38,7 @@ function fetchFormations() {
         })
         .catch(err => {
             console.error("Erro:", err);
-            if (tbody) tbody.innerHTML = `<tr><td colspan="4" class="px-6 py-6 text-center text-red-600 italic">Erro ao carregar formações.</td></tr>`;
+            if (tbody) tbody.innerHTML = `<tr><td colspan="5" class="px-6 py-6 text-center text-red-600 italic">Erro ao carregar formações.</td></tr>`;
         });
 }
 
@@ -48,7 +48,7 @@ function renderTable(list) {
     tbody.innerHTML = "";
 
     if (list.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="4" class="px-6 py-6 text-center text-gray-500 italic">Nenhuma formação ou curso cadastrado.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" class="px-6 py-6 text-center text-gray-500 italic">Nenhuma formação ou curso cadastrado.</td></tr>`;
         return;
     }
 
@@ -68,6 +68,7 @@ function renderTable(list) {
             <td class="px-6 py-4 font-bold text-gray-900">${esc(title)} <span class="text-[10px] font-mono bg-teal-100 text-teal-800 px-2 py-0.5 rounded border border-teal-200 ml-2 font-bold">${esc(tipe)}</span></td>
             <td class="px-6 py-4 text-gray-600">${esc(f.institution)}</td>
             <td class="px-6 py-4 text-gray-600">${start} - ${end}</td>
+            <td class="px-6 py-4 text-center font-mono">${esc(f.weight)}</td>
             <td class="px-6 py-4 text-center">
                 <div class="flex justify-center gap-4">
                     <button onclick="deleteFormation(${f.id})" class="text-red-600 hover:text-red-800 cursor-pointer" title="Excluir">
@@ -94,6 +95,7 @@ function openModal() {
     document.getElementById("form_tipe_en").value = "";
     document.getElementById("form_ini_date").value = "";
     document.getElementById("form_end_date").value = "";
+    document.getElementById("form_weight").value = "0";
     document.getElementById("form_certificate").value = null;
     document.getElementById("certificate_preview").innerHTML = `<i class="fa-solid fa-award text-gray-300 text-2xl"></i>`;
 
@@ -141,6 +143,7 @@ function editFormation(id) {
     document.getElementById("form_tipe_en").value = form.tipe_en || "";
     document.getElementById("form_ini_date").value = form.ini_date || "";
     document.getElementById("form_end_date").value = form.end_date || "";
+    document.getElementById("form_weight").value = form.weight || 0;
     
     if (form.certificate) {
         document.getElementById("certificate_preview").innerHTML = `<img src="${form.certificate}" class="w-full h-full object-cover">`;
@@ -181,7 +184,8 @@ function saveFormation(e) {
     const tipe_en = document.getElementById("form_tipe_en").value.trim();
     const ini_date = document.getElementById("form_ini_date").value;
     const end_date = document.getElementById("form_end_date").value;
-
+    const weight = document.getElementById("form_weight").value;
+ 
     if (!title || !institution || !ini_date) {
         showToast("Preencha todos os campos obrigatórios.", "error");
         return;
@@ -200,6 +204,7 @@ function saveFormation(e) {
     form.append("ini_date", ini_date);
     if (end_date) form.append("end_date", end_date);
     else form.append("end_date", "");
+    form.append("weight", weight);
 
     const fileInput = document.getElementById("form_certificate");
     if (fileInput.files.length > 0) {

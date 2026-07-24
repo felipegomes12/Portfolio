@@ -18,7 +18,7 @@ class HomeTemplateView(TemplateView):
         profile = ProfileInfo.objects.first()
         projects = MyProjects.objects.prefetch_related("project_topics", "project_gallery").filter(is_active=True).order_by("-weight", "-id")
         experiences = ProfessionalExp.objects.all().order_by("-ini_date")
-        formations = Formation.objects.all().order_by("-ini_date")
+        formations = Formation.objects.all().order_by("-weight", "-ini_date")
         collaborators = Collaborator.objects.all().order_by("id")
         return render(request, self.template_name, {
             "profile": profile,
@@ -967,7 +967,7 @@ class DeleteProfessionalExpView(LoginRequiredMixin, View):
 class ListFormationView(LoginRequiredMixin, View):
     def get(self, request):
         try:
-            queryset = Formation.objects.all().order_by("-ini_date")
+            queryset = Formation.objects.all().order_by("-weight", "-ini_date")
             data = []
             for obj in queryset:
                 data.append({
@@ -980,6 +980,7 @@ class ListFormationView(LoginRequiredMixin, View):
                     "ini_date": obj.ini_date.strftime("%Y-%m-%d") if obj.ini_date else "",
                     "end_date": obj.end_date.strftime("%Y-%m-%d") if obj.end_date else "",
                     "certificate": obj.certificate.url if obj.certificate else None,
+                    "weight": obj.weight,
                 })
             return JsonResponse({"results": data})
         except Exception as e:
@@ -996,6 +997,8 @@ class CreateFormationView(LoginRequiredMixin, View):
             ini_date = request.POST.get("ini_date") or None
             end_date = request.POST.get("end_date") or None
             certificate = request.FILES.get("certificate")
+            weight_raw = request.POST.get("weight", "0")
+            weight = int(weight_raw) if weight_raw and weight_raw.isdigit() else 0
 
             obj = Formation.objects.create(
                 tipe=tipe,
@@ -1005,7 +1008,8 @@ class CreateFormationView(LoginRequiredMixin, View):
                 institution=institution,
                 ini_date=ini_date,
                 end_date=end_date,
-                certificate=certificate
+                certificate=certificate,
+                weight=weight
             )
             return JsonResponse({"message": "Formação criada", "id": obj.id})
         except Exception as e:
@@ -1024,6 +1028,10 @@ class UpdateFormationView(LoginRequiredMixin, View):
                 obj.ini_date = request.POST.get("ini_date") or None
             if "end_date" in request.POST:
                 obj.end_date = request.POST.get("end_date") or None
+            
+            weight_raw = request.POST.get("weight")
+            if weight_raw is not None:
+                obj.weight = int(weight_raw) if weight_raw.isdigit() else 0
             
             certificate = request.FILES.get("certificate")
             if certificate:

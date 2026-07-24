@@ -130,6 +130,8 @@ class Formation(models.Model):
     ini_date = models.DateField(blank=True)
     end_date = models.DateField(blank=True, null=True)
     certificate = models.ImageField(blank=True, upload_to="certifications/")
+    weight = models.IntegerField(default=0)
+
 
 class AccessLog(models.Model):
     id = models.BigAutoField(primary_key=True)
