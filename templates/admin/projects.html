@@ -40,7 +40,7 @@
             <input type="hidden" id="project_id" value="">
 
             <!-- Informações principais -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
                 <!-- Título -->
                 <div class="flex flex-col gap-2 lang-pt">
                     <label class="font-bold text-gray-700">{% translate "Título do Projeto" %} *</label>
@@ -70,6 +70,18 @@
                         id="project_github_rep_link"
                         class="bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:border-teal-600 text-gray-900 font-mono"
                         placeholder="https://github.com/usuario/repositorio"
+                    >
+                </div>
+                <!-- Peso (Ordenação) -->
+                <div class="flex flex-col gap-2">
+                    <label class="font-bold text-gray-700">{% translate "Peso (Ordenação)" %}</label>
+                    <input 
+                        type="number"
+                        id="project_weight"
+                        class="bg-gray-50 border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:border-teal-600 text-gray-900 font-mono"
+                        placeholder="Ex: 10"
+                        value="0"
+                        min="0"
                     >
                 </div>
             </div>
@@ -301,6 +313,7 @@
                 <tr>
                     <th class="px-6 py-4 font-bold">{% translate "Nome" %}</th>
                     <th class="px-6 py-4 font-bold">Link</th>
+                    <th class="px-6 py-4 font-bold text-center">{% translate "Peso" %}</th>
                     <th class="px-6 py-4 font-bold">{% translate "Criado em" %}</th>
                     <th class="px-6 py-4 font-bold text-center">{% translate "Ações" %}</th>
                 </tr>

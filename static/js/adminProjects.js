@@ -89,6 +89,7 @@ function renderTable(projects) {
             <td class="px-6 py-4 font-mono text-gray-600">
                 ${p.project_github_rep_link ? `<a href="${esc(p.project_github_rep_link)}" target="_blank" class="text-teal-700 hover:underline"><i class="fa-brands fa-github"></i> Ver repositório</a>` : "-"}
             </td>
+            <td class="px-6 py-4 text-center text-gray-600">${esc(p.weight)}</td>
             <td class="px-6 py-4 text-gray-600">${esc(p.add_on.split(" ")[0])}</td>
             <td class="px-6 py-4 text-center">
                 <div class="flex justify-center gap-4">
@@ -167,6 +168,7 @@ function openModal() {
     document.getElementById("project_resorce_tags_en").value = "";
     document.getElementById("project_note").value = "";
     document.getElementById("project_note_en").value = "";
+    document.getElementById("project_weight").value = "0";
     
     // Limpar inputs de file e previews
     document.getElementById("project_icon").value = null;
@@ -321,6 +323,7 @@ function editProject(id) {
             document.getElementById("project_resorce_tags_en").value = p.project_resorce_tags_en ? p.project_resorce_tags_en.join("\n") : "";
             document.getElementById("project_note").value = p.project_note || "";
             document.getElementById("project_note_en").value = p.project_note_en || "";
+            document.getElementById("project_weight").value = p.weight || "0";
 
             // Preview do ícone
             if (p.project_icon) {
@@ -518,6 +521,7 @@ async function saveProject() {
         formProj.append("project_resorce_tags_en", document.getElementById("project_resorce_tags_en").value);
         formProj.append("project_note", document.getElementById("project_note").value.trim());
         formProj.append("project_note_en", document.getElementById("project_note_en").value.trim());
+        formProj.append("weight", document.getElementById("project_weight").value.trim() || "0");
         
         // Relacionamentos JSON arrays
         formProj.append("project_topics", JSON.stringify(topicIds));

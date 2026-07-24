@@ -591,3 +591,6 @@ msgstr "Links"
 
 msgid "Gerencie os dados das pessoas com quem você trabalha."
 msgstr "Manage the data of the people you work with."
+
+msgid "Peso (Ordenação)"
+msgstr "Weight (Sorting)"

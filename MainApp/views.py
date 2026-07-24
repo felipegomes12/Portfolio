@@ -16,7 +16,7 @@ class HomeTemplateView(TemplateView):
 
     def get(self, request):
         profile = ProfileInfo.objects.first()
-        projects = MyProjects.objects.prefetch_related("project_topics", "project_gallery").all().order_by("-id")
+        projects = MyProjects.objects.prefetch_related("project_topics", "project_gallery").all().order_by("-weight", "-id")
         experiences = ProfessionalExp.objects.all().order_by("-ini_date")
         formations = Formation.objects.all().order_by("-ini_date")
         collaborators = Collaborator.objects.all().order_by("id")
@@ -232,6 +232,9 @@ class CreateMyProjectView(LoginRequiredMixin, View):
                 project_note_en = request.POST.get("project_note_en")
                 project_github_rep_link = request.POST.get("project_github_rep_link")
                 
+                weight_raw = request.POST.get("weight", "0")
+                weight = int(weight_raw) if weight_raw and weight_raw.isdigit() else 0
+                
                 topics_raw = request.POST.get("project_topics", "[]")
                 topics_ids = json.loads(topics_raw)
                 
@@ -253,6 +256,7 @@ class CreateMyProjectView(LoginRequiredMixin, View):
                 project_note = data.get("project_note")
                 project_note_en = data.get("project_note_en")
                 project_github_rep_link = data.get("project_github_rep_link")
+                weight = int(data.get("weight", 0) or 0)
                 topics_ids = data.get("project_topics", [])
                 gallery_ids = data.get("project_gallery", [])
 
@@ -276,7 +280,8 @@ class CreateMyProjectView(LoginRequiredMixin, View):
                 project_note=project_note,
                 project_note_en=project_note_en,
                 project_github_rep_link=project_github_rep_link,
-                project_icon=project_icon
+                project_icon=project_icon,
+                weight=weight
             )
 
             if topics_ids:
@@ -376,6 +381,13 @@ class UpdateMyProjectView(LoginRequiredMixin, View):
                 obj.project_note_en = request.POST.get("project_note_en", obj.project_note_en)
                 obj.project_github_rep_link = request.POST.get("project_github_rep_link", obj.project_github_rep_link)
                 
+                weight_raw = request.POST.get("weight")
+                if weight_raw is not None:
+                    try:
+                        obj.weight = int(weight_raw)
+                    except ValueError:
+                        pass
+                
                 topics_raw = request.POST.get("project_topics")
                 if topics_raw is not None:
                     topics_ids = json.loads(topics_raw)
@@ -401,6 +413,11 @@ class UpdateMyProjectView(LoginRequiredMixin, View):
                 obj.project_note = data.get("project_note", obj.project_note)
                 obj.project_note_en = data.get("project_note_en", obj.project_note_en)
                 obj.project_github_rep_link = data.get("project_github_rep_link", obj.project_github_rep_link)
+                if "weight" in data:
+                    try:
+                        obj.weight = int(data.get("weight", 0))
+                    except ValueError:
+                        pass
 
                 if "project_topics" in data:
                     obj.project_topics.set(ProjectTopics.objects.filter(id__in=data.get("project_topics", [])))
@@ -594,7 +611,7 @@ class ListMyProjectsView(LoginRequiredMixin, View):
             queryset = MyProjects.objects.prefetch_related(
                 "project_topics",
                 "project_gallery"
-            ).all().order_by("-id")
+            ).all().order_by("-weight", "-id")
 
             if search:
                 queryset = queryset.filter(
@@ -611,6 +628,7 @@ class ListMyProjectsView(LoginRequiredMixin, View):
                 data.append({
 
                     "id": obj.id,
+                    "weight": obj.weight,
 
                     "project_icon": (
                         obj.project_icon.url
@@ -682,6 +700,7 @@ class DetailMyProjectsView(LoginRequiredMixin, View):
             return JsonResponse({
 
                 "id": obj.id,
+                "weight": obj.weight,
 
                 "project_icon": (
                     obj.project_icon.url

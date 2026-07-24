@@ -129,19 +129,31 @@
 
         <!-- Barra de Busca / Filtros -->
         <div
-            class="w-full bg-gray-100 rounded-lg shadow-xl p-4 flex flex-col md:flex-row gap-4 justify-between items-center mb-8 border border-teal-700">
-            <div class="relative w-full md:w-96">
-                <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+            class="w-full bg-gray-100 rounded-lg shadow-xl p-6 flex flex-col gap-6 mb-8 border border-teal-700">
+            <!-- Barra de Busca (centralizada e mais larga) -->
+            <div class="relative w-full max-w-2xl mx-auto">
+                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-base"></i>
                 <input type="text" id="searchProjects"
-                    class="bg-white border-2 border-gray-300 rounded-lg py-2 pl-10 pr-4 w-full text-gray-900 focus:outline-none focus:border-teal-600 font-mono text-sm"
+                    class="bg-white border-2 border-gray-300 rounded-lg py-2.5 pl-11 pr-4 w-full text-gray-900 focus:outline-none focus:border-teal-600 font-mono text-sm shadow-inner transition"
                     placeholder="{% translate 'Filtrar por nome ou tecnologia...' %}">
             </div>
 
-            <div class="flex flex-wrap gap-2 justify-center" id="tagFilters">
-                <button onclick="filterByTag('todos')"
-                    class="tag-filter-btn px-3 py-1.5 rounded-full text-xs font-mono font-bold bg-teal-800 text-white hover:bg-teal-900 transition"
-                    data-tag-all="true">
-                    {% translate "Todos" %}
+            <!-- Divisor sutil para separar busca de tags -->
+            <div class="border-t border-gray-200 w-full my-1"></div>
+
+            <!-- Seção de Tags -->
+            <div class="flex flex-col items-center gap-4">
+                <div class="flex flex-wrap gap-2 justify-center" id="tagFilters">
+                    <button onclick="filterByTag('todos')"
+                        class="tag-filter-btn px-3 py-1.5 rounded-full text-xs font-mono font-bold bg-teal-800 text-white hover:bg-teal-900 transition shadow-sm"
+                        data-tag-all="true">
+                        {% translate "Todos" %}
+                    </button>
+                </div>
+                <!-- Botão Mostrar Mais -->
+                <button id="toggleTagsBtn" class="hidden text-xs font-mono font-bold text-teal-700 hover:text-teal-900 transition focus:outline-none cursor-pointer flex items-center gap-1 bg-white border border-gray-300 px-3 py-1 rounded-md shadow-sm hover:bg-teal-50">
+                    <span id="toggleTagsText">{% translate "Mostrar mais" %}</span>
+                    <i id="toggleTagsIcon" class="fa-solid fa-chevron-down"></i>
                 </button>
             </div>
         </div>
@@ -619,6 +631,9 @@
         const projectCards = document.querySelectorAll(".project-card");
         const tagFiltersContainer = document.getElementById("tagFilters");
         const searchInput = document.getElementById("searchProjects");
+        const toggleTagsBtn = document.getElementById("toggleTagsBtn");
+        const toggleTagsText = document.getElementById("toggleTagsText");
+        const toggleTagsIcon = document.getElementById("toggleTagsIcon");
 
         let allTags = new Set();
 
@@ -631,14 +646,75 @@
             }
         });
 
-        // Adiciona botões de tag dinamicamente
-        allTags.forEach(tag => {
-            const btn = document.createElement("button");
-            btn.className = "tag-filter-btn px-3 py-1.5 rounded-full text-xs font-mono font-bold bg-white text-gray-700 hover:bg-teal-100 border border-gray-300 transition";
-            btn.textContent = tag;
-            btn.setAttribute("onclick", `filterByTag('${tag}')`);
-            tagFiltersContainer.appendChild(btn);
-        });
+        const tagsArray = Array.from(allTags);
+        const INITIAL_LIMIT = 12; // Mostrar até 12 tags inicialmente
+        let isExpanded = false;
+
+        const isEn = "{{ LANGUAGE_CODE }}".slice(0, 2) === "en";
+        const textShowMore = isEn ? "Show more" : "Mostrar mais";
+        const textShowLess = isEn ? "Show less" : "Mostrar menos";
+
+        function renderTags() {
+            // Remove as tags dinâmicas anteriores (mantendo o botão "Todos")
+            const children = Array.from(tagFiltersContainer.children);
+            children.forEach(child => {
+                if (child.getAttribute("data-tag-all") !== "true") {
+                    tagFiltersContainer.removeChild(child);
+                }
+            });
+
+            // Determina quais tags renderizar
+            const tagsToRender = isExpanded ? tagsArray : tagsArray.slice(0, INITIAL_LIMIT);
+
+            tagsToRender.forEach(tag => {
+                const btn = document.createElement("button");
+                btn.textContent = tag;
+                btn.setAttribute("onclick", `filterByTag('${tag}')`);
+                
+                // Se a tag renderizada for a selecionada atualmente, aplica o estilo ativo
+                if (currentSelectedTag === tag) {
+                    btn.className = "tag-filter-btn px-3 py-1.5 rounded-full text-xs font-mono font-bold bg-teal-800 text-white hover:bg-teal-900 transition shadow-sm";
+                } else {
+                    btn.className = "tag-filter-btn px-3 py-1.5 rounded-full text-xs font-mono font-bold bg-white text-gray-700 hover:bg-teal-100 border border-gray-300 transition shadow-sm";
+                }
+                tagFiltersContainer.appendChild(btn);
+            });
+
+            // Atualiza o estilo do botão 'Todos'
+            const allBtn = tagFiltersContainer.querySelector('[data-tag-all="true"]');
+            if (allBtn) {
+                if (currentSelectedTag === 'todos') {
+                    allBtn.className = "tag-filter-btn px-3 py-1.5 rounded-full text-xs font-mono font-bold bg-teal-800 text-white hover:bg-teal-900 transition shadow-sm";
+                } else {
+                    allBtn.className = "tag-filter-btn px-3 py-1.5 rounded-full text-xs font-mono font-bold bg-white text-gray-700 hover:bg-teal-100 border border-gray-300 transition shadow-sm";
+                }
+            }
+
+            // Exibe ou oculta o botão de toggle com base na quantidade total de tags
+            if (tagsArray.length > INITIAL_LIMIT) {
+                toggleTagsBtn.classList.remove("hidden");
+                if (isExpanded) {
+                    toggleTagsText.textContent = textShowLess;
+                    toggleTagsIcon.className = "fa-solid fa-chevron-up";
+                } else {
+                    toggleTagsText.textContent = textShowMore;
+                    toggleTagsIcon.className = "fa-solid fa-chevron-down";
+                }
+            } else {
+                toggleTagsBtn.classList.add("hidden");
+            }
+        }
+
+        // Configura o evento do botão de toggle
+        if (toggleTagsBtn) {
+            toggleTagsBtn.addEventListener("click", function () {
+                isExpanded = !isExpanded;
+                renderTags();
+            });
+        }
+
+        // Renderização inicial
+        renderTags();
 
         // Event listener para o input de busca
         searchInput.addEventListener("input", function () {
@@ -656,9 +732,9 @@
         buttons.forEach(btn => {
             const isAll = btn.getAttribute("data-tag-all") === "true";
             if ((tag === 'todos' && isAll) || (btn.textContent.trim() === tag)) {
-                btn.className = "tag-filter-btn px-3 py-1.5 rounded-full text-xs font-mono font-bold bg-teal-800 text-white hover:bg-teal-900 transition";
+                btn.className = "tag-filter-btn px-3 py-1.5 rounded-full text-xs font-mono font-bold bg-teal-800 text-white hover:bg-teal-900 transition shadow-sm";
             } else {
-                btn.className = "tag-filter-btn px-3 py-1.5 rounded-full text-xs font-mono font-bold bg-white text-gray-700 hover:bg-teal-100 border border-gray-300 transition";
+                btn.className = "tag-filter-btn px-3 py-1.5 rounded-full text-xs font-mono font-bold bg-white text-gray-700 hover:bg-teal-100 border border-gray-300 transition shadow-sm";
             }
         });
 

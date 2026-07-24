@@ -72,6 +72,7 @@ class MyProjects(models.Model):
     project_note_en = models.TextField(null=True, blank=True)
     project_github_rep_link = models.TextField(null=True)
     project_gallery = models.ManyToManyField(ProjectGallery, blank=True)
+    weight = models.IntegerField(default=0)
     add_on = models.DateTimeField(auto_now_add=True)
 
 class Tags(models.Model):

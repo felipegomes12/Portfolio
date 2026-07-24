@@ -60,7 +60,7 @@
         <div class="lg:col-span-2 flex flex-col gap-8">
             
             <!-- Janela de Descrição -->
-            <div class="flex flex-col h-full">
+            <div class="flex flex-col">
                 <div class="bg-gray-100 border-t-16 rounded-t-lg border-l-16 border-b-8 border-r-8 shadow-md p-3 flex justify-between items-center border-teal-800">
                     <h3 class="text-sm font-bold text-gray-900 flex items-center gap-2">
                         <i class="fa-solid fa-align-left text-teal-600"></i> descricao.md
@@ -76,6 +76,30 @@
                     <p class="whitespace-pre-line">{% if LANGUAGE_CODE|slice:":2" == 'en' and project.project_description_en %}{{ project.project_description_en }}{% else %}{{ project.project_description }}{% endif %}</p>
                 </div>
             </div>
+
+            <!-- Janela da Galeria (apenas se houver imagens) -->
+            {% if project.project_gallery.all %}
+                <div class="flex flex-col">
+                    <div class="bg-gray-100 border-t-16 rounded-t-lg border-l-16 border-b-8 border-r-8 shadow-md p-3 flex justify-between items-center border-teal-800">
+                        <h3 class="text-sm font-bold text-gray-900 flex items-center gap-2">
+                            <i class="fa-solid fa-images text-teal-600"></i> galeria.img
+                        </h3>
+                        <div class="flex gap-2">
+                            <div class="bg-blue-600 w-2.5 h-2.5 rounded-full"></div>
+                            <div class="bg-yellow-500 w-2.5 h-2.5 rounded-full"></div>
+                            <div class="bg-red-500 w-2.5 h-2.5 rounded-full"></div>
+                        </div>
+                    </div>
+                    <div class="relative w-full h-[400px] md:h-[450px] overflow-hidden bg-gray-900 rounded-b-lg border-l-16 border-r-8 border-b-8 shadow-md border-teal-800 flex items-center justify-center">
+                        {% for item in project.project_gallery.all %}
+                            <img src="{{ item.img.url }}" alt="Screenshot" 
+                                 class="gallery-slide absolute inset-0 w-full h-full object-contain transition-opacity duration-1000 opacity-0 cursor-pointer"
+                                 data-slide-index="{{ forloop.counter0 }}"
+                                 onclick="openLightbox({{ forloop.counter0 }})">
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
 
             <!-- Janela de Observações (se houver) -->
             {% if project.project_note or project.project_note_en %}
@@ -117,9 +141,6 @@
                     <button onclick="switchTab('github')" id="tab-btn-github" class="tab-btn active px-4 py-2 text-xs font-bold border-r border-gray-300 bg-gray-100 text-teal-900 cursor-pointer">
                         GitHub
                     </button>
-                    <button onclick="switchTab('galeria')" id="tab-btn-galeria" class="tab-btn px-4 py-2 text-xs font-bold border-r border-gray-300 text-gray-600 hover:bg-gray-50 cursor-pointer">
-                        {% translate "Galeria" %}
-                    </button>
                     <button onclick="switchTab('recursos')" id="tab-btn-recursos" class="tab-btn px-4 py-2 text-xs font-bold text-gray-600 hover:bg-gray-50 cursor-pointer">
                         {% translate "Recursos" %}
                     </button>
@@ -139,22 +160,6 @@
                             </a>
                         {% else %}
                             <p class="text-gray-500 italic">{% translate "Nenhum repositório do GitHub foi cadastrado para este projeto." %}</p>
-                        {% endif %}
-                    </div>
-
-                    <!-- Conteúdo: Galeria -->
-                    <div id="tab-content-galeria" class="tab-content hidden flex flex-col gap-4">
-                        <h4 class="font-bold text-gray-900 text-sm">{% translate "Imagens do Sistema" %}</h4>
-                        {% if project.project_gallery.all %}
-                            <div class="grid grid-cols-2 gap-2" id="galleryContainer">
-                                {% for item in project.project_gallery.all %}
-                                    <div class="border border-gray-300 rounded overflow-hidden cursor-pointer hover:opacity-85 transition" onclick="openLightbox('{{ item.img.url }}')">
-                                        <img src="{{ item.img.url }}" alt="Screenshot" class="w-full h-20 object-cover">
-                                    </div>
-                                {% endfor %}
-                            </div>
-                        {% else %}
-                            <p class="text-gray-500 italic">{% translate "Nenhuma captura de tela cadastrada na galeria." %}</p>
                         {% endif %}
                     </div>
 
@@ -257,12 +262,32 @@
 </div>
 
 <!-- Lightbox Modal para Galeria de Imagens -->
-<div id="lightboxModal" class="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 hidden flex-col justify-center items-center p-4 font-mono">
-    <button onclick="closeLightbox()" class="absolute top-6 right-6 text-white text-3xl hover:text-gray-300 transition cursor-pointer">
+<div id="lightboxModal" class="fixed inset-0 bg-black/95 backdrop-blur-sm z-50 hidden flex-col justify-center items-center p-4 font-mono select-none">
+    <!-- Botão de Fechar -->
+    <button onclick="closeLightbox()" class="absolute top-6 right-6 text-white text-3xl hover:text-gray-300 transition cursor-pointer z-50">
         <i class="fa-solid fa-xmark"></i>
     </button>
-    <div class="max-w-4xl max-h-[85vh]">
-        <img id="lightboxImage" src="" alt="Ampliada" class="max-w-full max-h-[80vh] object-contain border-4 border-teal-800 rounded-lg shadow-2xl">
+    
+    <div class="relative flex items-center justify-center w-full max-w-5xl h-[85vh] px-12">
+        <!-- Botão Anterior -->
+        <button onclick="prevLightboxImage()" class="absolute left-0 text-white text-4xl hover:text-gray-300 transition cursor-pointer p-4 z-50">
+            <i class="fa-solid fa-chevron-left"></i>
+        </button>
+        
+        <!-- Imagem Maximada -->
+        <div class="flex items-center justify-center w-full h-full">
+            <img id="lightboxImage" src="" alt="Ampliada" class="max-w-full max-h-full object-contain border-4 border-teal-800 rounded-lg shadow-2xl transition-all duration-300">
+        </div>
+        
+        <!-- Botão Próximo -->
+        <button onclick="nextLightboxImage()" class="absolute right-0 text-white text-4xl hover:text-gray-300 transition cursor-pointer p-4 z-50">
+            <i class="fa-solid fa-chevron-right"></i>
+        </button>
+    </div>
+    
+    <!-- Contador de imagem -->
+    <div id="lightboxCounter" class="text-white/70 text-sm mt-4">
+        1 / 5
     </div>
 </div>
 
@@ -285,13 +310,67 @@
         }
     }
 
-    function openLightbox(imgUrl) {
+    // Coleção de imagens da galeria
+    const galleryImages = [
+        {% for item in project.project_gallery.all %}
+            "{{ item.img.url }}",
+        {% endfor %}
+    ];
+
+    let currentSlideIndex = 0;
+    let autoplayTimer = null;
+    let currentLightboxIndex = 0;
+
+    // Função para iniciar o slideshow automático
+    function startAutoplay() {
+        if (galleryImages.length <= 1) return;
+        stopAutoplay(); // Garante que não haja múltiplos timers duplicados
+        autoplayTimer = setInterval(() => {
+            nextSlide();
+        }, 4000);
+    }
+
+    function stopAutoplay() {
+        if (autoplayTimer) {
+            clearInterval(autoplayTimer);
+            autoplayTimer = null;
+        }
+    }
+
+    function showSlide(index) {
+        const slides = document.querySelectorAll(".gallery-slide");
+        if (slides.length === 0) return;
+        
+        // Trata index circular
+        currentSlideIndex = (index + slides.length) % slides.length;
+        
+        slides.forEach((slide, i) => {
+            if (i === currentSlideIndex) {
+                slide.classList.remove("opacity-0");
+                slide.classList.add("opacity-100", "z-10");
+            } else {
+                slide.classList.add("opacity-0");
+                slide.classList.remove("opacity-100", "z-10");
+            }
+        });
+    }
+
+    function nextSlide() {
+        showSlide(currentSlideIndex + 1);
+    }
+
+    function prevSlide() {
+        showSlide(currentSlideIndex - 1);
+    }
+
+    function openLightbox(index) {
+        currentLightboxIndex = index;
+        updateLightbox();
         const modal = document.getElementById("lightboxModal");
-        const img = document.getElementById("lightboxImage");
-        img.src = imgUrl;
         modal.classList.remove("hidden");
         modal.classList.add("flex");
         document.body.classList.add("overflow-hidden");
+        stopAutoplay();
     }
 
     function closeLightbox() {
@@ -299,11 +378,69 @@
         modal.classList.add("hidden");
         modal.classList.remove("flex");
         document.body.classList.remove("overflow-hidden");
+        startAutoplay();
     }
 
+    function updateLightbox() {
+        const img = document.getElementById("lightboxImage");
+        const counter = document.getElementById("lightboxCounter");
+        if (galleryImages.length === 0) return;
+        
+        // Trata index circular
+        currentLightboxIndex = (currentLightboxIndex + galleryImages.length) % galleryImages.length;
+        
+        // Efeito de transição na mudança
+        img.style.opacity = "0";
+        setTimeout(() => {
+            img.src = galleryImages[currentLightboxIndex];
+            img.style.opacity = "1";
+        }, 150);
+        
+        counter.textContent = `${currentLightboxIndex + 1} / ${galleryImages.length}`;
+    }
+
+    function prevLightboxImage() {
+        currentLightboxIndex--;
+        updateLightbox();
+    }
+
+    function nextLightboxImage() {
+        currentLightboxIndex++;
+        updateLightbox();
+    }
+
+    // Inicialização do slideshow
+    document.addEventListener("DOMContentLoaded", () => {
+        if (galleryImages.length > 0) {
+            showSlide(0);
+            startAutoplay();
+        }
+    });
+
+    // Eventos de teclado e clique fora para o lightbox
     document.addEventListener("keydown", function(e) {
-        if (e.key === "Escape") {
-            closeLightbox();
+        const modal = document.getElementById("lightboxModal");
+        if (modal && !modal.classList.contains("hidden")) {
+            if (e.key === "Escape") {
+                closeLightbox();
+            } else if (e.key === "ArrowLeft") {
+                prevLightboxImage();
+            } else if (e.key === "ArrowRight") {
+                nextLightboxImage();
+            }
+        }
+    });
+
+    // Fechar ao clicar no background do lightbox
+    document.addEventListener("DOMContentLoaded", function () {
+        const modal = document.getElementById("lightboxModal");
+        if (modal) {
+            modal.addEventListener('click', function (e) {
+                // Fecha apenas se clicar no background escuro ou na div externa, não nas setas ou imagem
+                if (e.target === this || e.target.id === "lightboxModal" || e.target.classList.contains("relative") && e.target.tagName !== "IMG") {
+                    closeLightbox();
+                }
+            });
         }
     });
 </script>

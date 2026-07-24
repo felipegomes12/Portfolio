@@ -4,19 +4,19 @@
     <div class="w-full flex items-center rounded-md justify-between bg-gray-100 px-6 py-2 shadow-4xl border border-teal-800/10">
 
         <div class="flex gap-4">
-            <a href="#inicio" class="text-md hover:shadow-2xl hover:text-emerald-500 hover:shadow-emerald-500 font-semibold px-4 py-2 border-b-4 border-transparent hover:border-emerald-500 hover:bg-gray-200 transition">
+            <a href="{% url 'Home' %}#inicio" class="text-md hover:shadow-2xl hover:text-emerald-500 hover:shadow-emerald-500 font-semibold px-4 py-2 border-b-4 border-transparent hover:border-emerald-500 hover:bg-gray-200 transition">
                 {% translate "Início" %} <i class="fa-solid fa-house"></i>
             </a>
-            <a href="#projetos" class="text-md hover:shadow-2xl hover:text-emerald-500 hover:shadow-emerald-500 font-semibold px-4 py-2 border-b-4 border-transparent hover:border-emerald-500 hover:bg-gray-200 transition">
+            <a href="{% url 'Home' %}#projetos" class="text-md hover:shadow-2xl hover:text-emerald-500 hover:shadow-emerald-500 font-semibold px-4 py-2 border-b-4 border-transparent hover:border-emerald-500 hover:bg-gray-200 transition">
                 {% translate "Projetos" %} <i class="fa-solid fa-puzzle-piece"></i>
             </a>
-            <a href="#sobre" class="text-md hover:shadow-2xl hover:text-emerald-500 hover:shadow-emerald-500 font-semibold px-4 py-2 border-b-4 border-transparent hover:border-emerald-500 hover:bg-gray-200 transition">
+            <a href="{% url 'Home' %}#sobre" class="text-md hover:shadow-2xl hover:text-emerald-500 hover:shadow-emerald-500 font-semibold px-4 py-2 border-b-4 border-transparent hover:border-emerald-500 hover:bg-gray-200 transition">
                 {% translate "Sobre mim" %} <i class="fa-solid fa-user"></i>
             </a>
-            <a href="#colaboradores" class="text-md hover:shadow-2xl hover:text-emerald-500 hover:shadow-emerald-500 font-semibold px-4 py-2 border-b-4 border-transparent hover:border-emerald-500 hover:bg-gray-200 transition">
+            <a href="{% url 'Home' %}#colaboradores" class="text-md hover:shadow-2xl hover:text-emerald-500 hover:shadow-emerald-500 font-semibold px-4 py-2 border-b-4 border-transparent hover:border-emerald-500 hover:bg-gray-200 transition">
                 {% translate "Colaboradores" %} <i class="fa-solid fa-users"></i>
             </a>
-            <a href="#contato" class="text-md hover:shadow-2xl hover:text-emerald-500 hover:shadow-emerald-500 font-semibold px-4 py-2 border-b-4 border-transparent hover:border-emerald-500 hover:bg-gray-200 transition">
+            <a href="{% url 'Home' %}#contato" class="text-md hover:shadow-2xl hover:text-emerald-500 hover:shadow-emerald-500 font-semibold px-4 py-2 border-b-4 border-transparent hover:border-emerald-500 hover:bg-gray-200 transition">
                 {% translate "Contatos" %} <i class="fa-solid fa-address-card"></i>
             </a>
         </div>
