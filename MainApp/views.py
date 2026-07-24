@@ -823,6 +823,25 @@ class UpdateProfileView(LoginRequiredMixin, View):
                 if img:
                     profile.profile_img = img
 
+            # Handle resume clearing or updating
+            clear_resume = request.POST.get("clear_resume")
+            if clear_resume == "true":
+                if profile.resume:
+                    try:
+                        profile.resume.delete(save=False)
+                    except:
+                        pass
+                profile.resume = None
+            else:
+                resume_file = request.FILES.get("resume")
+                if resume_file:
+                    if profile.resume:
+                        try:
+                            profile.resume.delete(save=False)
+                        except:
+                            pass
+                    profile.resume = resume_file
+
             # Handle ManyToMany tags (skills)
             tags_raw = request.POST.get("tags")
             if tags_raw:

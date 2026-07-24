@@ -594,3 +594,26 @@ msgstr "Manage the data of the people you work with."
 
 msgid "Peso (Ordenação)"
 msgstr "Weight (Sorting)"
+
+# Resume translations
+msgid "Currículo"
+msgstr "Resume"
+
+msgid "Currículo (PDF, DOCX, etc.)"
+msgstr "Resume (PDF, DOCX, etc.)"
+
+msgid "Selecione o arquivo do currículo"
+msgstr "Select the resume file"
+
+msgid "Status:"
+msgstr "Status:"
+
+msgid "Ver Currículo"
+msgstr "View Resume"
+
+msgid "Nenhum arquivo"
+msgstr "No file"
+
+msgid "Remover Currículo"
+msgstr "Remove Resume"
+

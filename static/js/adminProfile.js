@@ -124,6 +124,7 @@ function saveProfile(e) {
     form.append("img_x", document.getElementById("img_x").value);
     form.append("img_y", document.getElementById("img_y").value);
     form.append("clear_profile_img", document.getElementById("clear_profile_img").value);
+    form.append("clear_resume", document.getElementById("clear_resume").value);
     
     // Datas
     const dateBirth = document.getElementById("date_birth").value;
@@ -135,6 +136,12 @@ function saveProfile(e) {
     const fileInput = document.getElementById("profile_img");
     if (fileInput.files.length > 0) {
         form.append("profile_img", fileInput.files[0]);
+    }
+
+    // Currículo
+    const resumeInput = document.getElementById("resume");
+    if (resumeInput.files.length > 0) {
+        form.append("resume", resumeInput.files[0]);
     }
 
     // Tags (Skills)
@@ -156,6 +163,9 @@ function saveProfile(e) {
     })
     .then(data => {
         showToast(data.message || "Perfil atualizado com sucesso!", "success");
+        setTimeout(() => {
+            location.reload();
+        }, 1000);
     })
     .catch(err => {
         console.error(err);
@@ -228,3 +238,50 @@ function createNewTag() {
         showToast("Erro ao criar nova skill.", "error");
     });
 }
+
+// Preview do currículo selecionado
+function previewResumeFile(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Desmarca a flag de exclusão
+    document.getElementById("clear_resume").value = "false";
+
+    // Atualiza o label do arquivo selecionado
+    document.getElementById("resume_filename_label").textContent = file.name;
+
+    // Atualiza o status
+    const statusText = document.getElementById("resume_status_text");
+    statusText.innerHTML = `<span class="text-amber-600 font-bold"><i class="fa-solid fa-file-arrow-up"></i> ${file.name} (Pronto para salvar)</span>`;
+
+    // Garante que o botão de exclusão exista
+    let removeBtn = document.getElementById("remove_resume_btn");
+    if (!removeBtn) {
+        const container = document.getElementById("resume_status_container");
+        removeBtn = document.createElement("button");
+        removeBtn.type = "button";
+        removeBtn.id = "remove_resume_btn";
+        removeBtn.onclick = clearResumeFile;
+        removeBtn.className = "text-left text-[10px] text-red-600 hover:text-red-800 font-bold font-mono transition cursor-pointer mt-1";
+        removeBtn.innerHTML = `<i class="fa-solid fa-trash-can"></i> Remover Currículo`;
+        container.appendChild(removeBtn);
+    }
+}
+
+// Limpar currículo local e marcar para exclusão no banco
+function clearResumeFile() {
+    if (confirm("Deseja marcar o currículo atual para remoção?")) {
+        document.getElementById("clear_resume").value = "true";
+        document.getElementById("resume").value = null; // Limpa input
+        document.getElementById("resume_filename_label").textContent = "Selecione o arquivo do currículo";
+
+        const statusText = document.getElementById("resume_status_text");
+        statusText.innerHTML = `<span class="text-red-500 italic">Marcado para remoção</span>`;
+
+        const btn = document.getElementById("remove_resume_btn");
+        if (btn) btn.remove();
+
+        showToast("Currículo marcado para remoção. Clique em 'Salvar Perfil' para confirmar.", "info");
+    }
+}
+
