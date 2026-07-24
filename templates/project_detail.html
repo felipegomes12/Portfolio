@@ -97,6 +97,19 @@
                                  data-slide-index="{{ forloop.counter0 }}"
                                  onclick="openLightbox({{ forloop.counter0 }})">
                         {% endfor %}
+                        
+                        {% if project.project_gallery.all|length > 1 %}
+                        <!-- Indicadores de slide (bolinhas) -->
+                        <div class="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex gap-2 bg-black/40 px-3 py-1.5 rounded-full backdrop-blur-sm">
+                            {% for item in project.project_gallery.all %}
+                                <button type="button" 
+                                        class="gallery-dot w-2.5 h-2.5 rounded-full bg-white/40 hover:bg-white transition-all duration-300 focus:outline-none cursor-pointer"
+                                        data-dot-index="{{ forloop.counter0 }}"
+                                        onclick="goToSlide({{ forloop.counter0 }})"
+                                        aria-label="{% translate 'Ir para imagem' %} {{ forloop.counter }}"></button>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
             {% endif %}
@@ -353,6 +366,24 @@
                 slide.classList.remove("opacity-100", "z-10");
             }
         });
+
+        // Atualiza as bolinhas indicadoras
+        const dots = document.querySelectorAll(".gallery-dot");
+        dots.forEach((dot, i) => {
+            if (i === currentSlideIndex) {
+                dot.classList.remove("bg-white/40");
+                dot.classList.add("bg-white", "scale-125");
+            } else {
+                dot.classList.remove("bg-white", "scale-125");
+                dot.classList.add("bg-white/40");
+            }
+        });
+    }
+
+    function goToSlide(index) {
+        stopAutoplay();
+        showSlide(index);
+        startAutoplay();
     }
 
     function nextSlide() {
