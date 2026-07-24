@@ -51,7 +51,7 @@ function fetchProjects(page = 1) {
             console.error("Erro ao buscar projetos:", err);
             const tbody = document.getElementById("projects_table_body");
             if (tbody) {
-                tbody.innerHTML = `<tr><td colspan="4" class="px-6 py-8 text-center text-red-600 italic">Erro ao carregar dados. Tente novamente.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-8 text-center text-red-600 italic">Erro ao carregar dados. Tente novamente.</td></tr>`;
             }
         });
 }
@@ -73,7 +73,7 @@ function renderTable(projects) {
     tbody.innerHTML = "";
 
     if (!projects || projects.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="4" class="px-6 py-8 text-center text-gray-500 italic">Nenhum projeto cadastrado.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-8 text-center text-gray-500 italic">Nenhum projeto cadastrado.</td></tr>`;
         return;
     }
 
@@ -91,6 +91,12 @@ function renderTable(projects) {
             </td>
             <td class="px-6 py-4 text-center text-gray-600">${esc(p.weight)}</td>
             <td class="px-6 py-4 text-gray-600">${esc(p.add_on.split(" ")[0])}</td>
+            <td class="px-6 py-4 text-center">
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" class="sr-only peer" ${p.is_active ? 'checked' : ''} onchange="toggleProjectActive(${p.id}, this.checked)">
+                    <div class="w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-600"></div>
+                </label>
+            </td>
             <td class="px-6 py-4 text-center">
                 <div class="flex justify-center gap-4">
                     <button onclick="deleteProject(${p.id})" class="text-red-600 hover:text-red-800 cursor-pointer transition" title="Excluir">
@@ -566,4 +572,30 @@ async function saveProject() {
         btn.disabled = false;
         btn.innerHTML = oldText;
     }
+}
+
+// Ativar/Desativar Projeto diretamente da lista
+function toggleProjectActive(id, isActive) {
+    const csrfToken = getCSRFToken();
+    fetch(`/api/projects/${id}/update/`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": csrfToken
+        },
+        body: JSON.stringify({ is_active: isActive })
+    })
+    .then(res => {
+        if (res.ok) {
+            showToast(isActive ? "Projeto ativado com sucesso!" : "Projeto desativado com sucesso!", "success");
+        } else {
+            showToast("Erro ao alterar status do projeto.", "error");
+            fetchProjects(currentPage); // Reverte o switch na interface
+        }
+    })
+    .catch(err => {
+        console.error("Erro ao alterar status:", err);
+        showToast("Erro de rede ao alterar status do projeto.", "error");
+        fetchProjects(currentPage); // Reverte o switch na interface
+    });
 }

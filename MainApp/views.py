@@ -16,7 +16,7 @@ class HomeTemplateView(TemplateView):
 
     def get(self, request):
         profile = ProfileInfo.objects.first()
-        projects = MyProjects.objects.prefetch_related("project_topics", "project_gallery").all().order_by("-weight", "-id")
+        projects = MyProjects.objects.prefetch_related("project_topics", "project_gallery").filter(is_active=True).order_by("-weight", "-id")
         experiences = ProfessionalExp.objects.all().order_by("-ini_date")
         formations = Formation.objects.all().order_by("-ini_date")
         collaborators = Collaborator.objects.all().order_by("id")
@@ -132,7 +132,7 @@ class ProjectDetailView(TemplateView):
 
     def get(self, request, id):
         project = MyProjects.objects.prefetch_related("project_topics", "project_gallery").filter(id=id).first()
-        if not project:
+        if not project or (not project.is_active and not request.user.is_authenticated):
             from django.http import Http404
             raise Http404("Projeto não encontrado")
         return render(request, self.template_name, {"project": project})
@@ -235,6 +235,9 @@ class CreateMyProjectView(LoginRequiredMixin, View):
                 weight_raw = request.POST.get("weight", "0")
                 weight = int(weight_raw) if weight_raw and weight_raw.isdigit() else 0
                 
+                is_active_raw = request.POST.get("is_active")
+                is_active = is_active_raw.lower() in ['true', '1', 'yes'] if is_active_raw is not None else False
+                
                 topics_raw = request.POST.get("project_topics", "[]")
                 topics_ids = json.loads(topics_raw)
                 
@@ -257,6 +260,7 @@ class CreateMyProjectView(LoginRequiredMixin, View):
                 project_note_en = data.get("project_note_en")
                 project_github_rep_link = data.get("project_github_rep_link")
                 weight = int(data.get("weight", 0) or 0)
+                is_active = bool(data.get("is_active", False))
                 topics_ids = data.get("project_topics", [])
                 gallery_ids = data.get("project_gallery", [])
 
@@ -281,7 +285,8 @@ class CreateMyProjectView(LoginRequiredMixin, View):
                 project_note_en=project_note_en,
                 project_github_rep_link=project_github_rep_link,
                 project_icon=project_icon,
-                weight=weight
+                weight=weight,
+                is_active=is_active
             )
 
             if topics_ids:
@@ -388,6 +393,10 @@ class UpdateMyProjectView(LoginRequiredMixin, View):
                     except ValueError:
                         pass
                 
+                is_active_raw = request.POST.get("is_active")
+                if is_active_raw is not None:
+                    obj.is_active = is_active_raw.lower() in ['true', '1', 'yes']
+                
                 topics_raw = request.POST.get("project_topics")
                 if topics_raw is not None:
                     topics_ids = json.loads(topics_raw)
@@ -418,6 +427,9 @@ class UpdateMyProjectView(LoginRequiredMixin, View):
                         obj.weight = int(data.get("weight", 0))
                     except ValueError:
                         pass
+
+                if "is_active" in data:
+                    obj.is_active = bool(data.get("is_active"))
 
                 if "project_topics" in data:
                     obj.project_topics.set(ProjectTopics.objects.filter(id__in=data.get("project_topics", [])))
@@ -629,6 +641,7 @@ class ListMyProjectsView(LoginRequiredMixin, View):
 
                     "id": obj.id,
                     "weight": obj.weight,
+                    "is_active": obj.is_active,
 
                     "project_icon": (
                         obj.project_icon.url
@@ -701,6 +714,7 @@ class DetailMyProjectsView(LoginRequiredMixin, View):
 
                 "id": obj.id,
                 "weight": obj.weight,
+                "is_active": obj.is_active,
 
                 "project_icon": (
                     obj.project_icon.url

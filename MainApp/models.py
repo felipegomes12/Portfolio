@@ -74,6 +74,7 @@ class MyProjects(models.Model):
     project_gallery = models.ManyToManyField(ProjectGallery, blank=True)
     weight = models.IntegerField(default=0)
     add_on = models.DateTimeField(auto_now_add=True)
+    is_active = models.BooleanField(default=False)
 
 class Tags(models.Model):
     title = models.CharField(max_length=255)

@@ -1038,6 +1038,9 @@ components:
           type: array
           items:
             type: integer
+        is_active:
+          type: boolean
+          default: false
 
     ProjectCreateInputMultipart:
       type: object
@@ -1086,6 +1089,9 @@ components:
         project_icon:
           type: string
           format: binary
+        is_active:
+          type: string
+          description: "'true' ou 'false' para ativar o projeto"
 
     ProjectUpdateInputJSON:
       type: object
@@ -1136,6 +1142,8 @@ components:
           type: array
           items:
             type: integer
+        is_active:
+          type: boolean
 
     ProjectUpdateInputMultipart:
       type: object
@@ -1182,6 +1190,9 @@ components:
         project_icon:
           type: string
           format: binary
+        is_active:
+          type: string
+          description: "'true' ou 'false' para ativar o projeto"
 
     ProjectListOutput:
       type: object
@@ -1212,6 +1223,8 @@ components:
           type: string
         project_github_rep_link:
           type: string
+        is_active:
+          type: boolean
         project_topics:
           type: array
           items:
@@ -1311,6 +1324,8 @@ components:
                 type: integer
               img:
                 type: string
+        is_active:
+          type: boolean
         add_on:
           type: string
           description: Formato "dd/mm/aaaa hh:mm:ss"
