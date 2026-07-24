@@ -150,13 +150,16 @@
 
             <!-- Upload da Imagem do Perfil -->
             <div class="flex flex-col gap-2 border-t border-gray-200 pt-4">
-                <label class="font-bold text-gray-700 font-mono">{% translate "Foto de Perfil" %}</label>
+                <label class="font-bold text-gray-700 font-mono">
+                    {% translate "Foto de Perfil" %}
+                </label>
                 <div class="flex items-center gap-6">
                     <label
                         class="flex-grow border-2 border-dashed border-gray-300 rounded-xl p-6 bg-gray-50 hover:bg-gray-100 transition cursor-pointer flex flex-col items-center gap-2">
                         <i class="fa-solid fa-image-portrait text-3xl text-gray-400"></i>
-                        <span class="text-xs text-gray-500">{% translate "Selecione uma imagem quadrada de retrato"
-                            %}</span>
+                        <span class="text-xs text-gray-500">
+                            {% translate "Selecione uma imagem quadrada de retrato" %}
+                        </span>
                         <input type="file" id="profile_img" class="hidden" accept="image/*"
                             onchange="previewProfileImage(event)">
                     </label>
@@ -183,24 +186,27 @@
                 <!-- Sliders de Ajuste -->
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-2 p-4 border border-gray-300 rounded bg-gray-50">
                     <div class="flex flex-col gap-1">
-                        <label class="font-bold text-[10px] text-gray-600 font-mono">Zoom (<span id="zoom_val">{{
-                                profile.img_zoom|default:1.0|unlocalize }}</span>x)</label>
+                        <label class="font-bold text-[10px] text-gray-600 font-mono">
+                            Zoom (<span id="zoom_val">{{ profile.img_zoom|default:1.0|unlocalize }}</span>x)
+                        </label>
                         <input type="range" id="img_zoom" min="0.5" max="3" step="0.05"
                             value="{{ profile.img_zoom|default:1.0|unlocalize }}"
                             class="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-teal-700"
                             oninput="updateImageTransform()">
                     </div>
                     <div class="flex flex-col gap-1">
-                        <label class="font-bold text-[10px] text-gray-600 font-mono">{% translate "Deslocamento X" %}
-                            (<span id="x_val">{{ profile.img_x|default:0.0|unlocalize }}</span>px)</label>
+                        <label class="font-bold text-[10px] text-gray-600 font-mono">
+                            {% translate "Deslocamento X" %} (<span id="x_val">{{ profile.img_x|default:0.0|unlocalize }}</span>px)
+                        </label>
                         <input type="range" id="img_x" min="-100" max="100" step="1"
                             value="{{ profile.img_x|default:0.0|unlocalize }}"
                             class="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-teal-700"
                             oninput="updateImageTransform()">
                     </div>
                     <div class="flex flex-col gap-1">
-                        <label class="font-bold text-[10px] text-gray-600 font-mono">{% translate "Deslocamento Y" %}
-                            (<span id="y_val">{{ profile.img_y|default:0.0|unlocalize }}</span>px)</label>
+                        <label class="font-bold text-[10px] text-gray-600 font-mono">
+                            {% translate "Deslocamento Y" %} (<span id="y_val">{{ profile.img_y|default:0.0|unlocalize }}</span>px)
+                        </label>
                         <input type="range" id="img_y" min="-100" max="100" step="1"
                             value="{{ profile.img_y|default:0.0|unlocalize }}"
                             class="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-teal-700"
@@ -209,14 +215,16 @@
                 </div>
                 <!-- Upload do Currículo (CV) -->
                 <div class="flex flex-col gap-2 border-t border-gray-200 pt-4">
-                    <label class="font-bold text-gray-700 font-mono">{% translate "Currículo (PDF, DOCX, etc.)"
-                        %}</label>
+                    <label class="font-bold text-gray-700 font-mono">
+                        {% translate "Currículo (PDF, DOCX, etc.)" %}
+                    </label>
                     <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                         <label
                             class="flex-grow border-2 border-dashed border-gray-300 rounded-xl p-4 bg-gray-50 hover:bg-gray-100 transition cursor-pointer flex flex-col items-center gap-1.5">
                             <i class="fa-solid fa-file-arrow-up text-2xl text-gray-400"></i>
-                            <span class="text-xs text-gray-500" id="resume_filename_label">{% translate "Selecione o
-                                arquivo do currículo" %}</span>
+                            <span class="text-xs text-gray-500" id="resume_filename_label">
+                                {% translate "Selecione o arquivo do currículo" %}
+                            </span>
                             <input type="file" id="resume" class="hidden" accept=".pdf,.doc,.docx"
                                 onchange="previewResumeFile(event)">
                         </label>
@@ -251,36 +259,44 @@
 
                 <!-- Escolha de Skills/Tags (ManyToMany) -->
                 <div class="flex flex-col gap-2 border-t border-gray-200 pt-4">
-                    <label class="font-bold text-gray-700 font-mono mb-2">{% translate "Competências / Tecnologias
-                        (Skills)" %}</label>
+                    <label class="font-bold text-gray-700 font-mono mb-2">
+                        {% translate "Competências / Tecnologias (Skills)" %}
+                    </label>
                     <div id="skills_checkbox_container"
                         class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 p-4 border border-gray-300 rounded bg-white max-h-48 overflow-y-auto">
                         {% for tag in tags %}
                         <label class="flex items-center gap-2 text-xs font-bold cursor-pointer hover:text-teal-700">
-                            <input type="checkbox" name="tag_checkboxes" value="{{ tag.id }}" {% if tag in
-                                profile.tags.all %}checked{% endif %}
+                            {% if tag in profile.tags.all %}
+                            <input type="checkbox" name="tag_checkboxes" value="{{ tag.id }}" checked
                                 class="rounded text-teal-600 focus:ring-teal-500 cursor-pointer">
+                            {% else %}
+                            <input type="checkbox" name="tag_checkboxes" value="{{ tag.id }}"
+                                class="rounded text-teal-600 focus:ring-teal-500 cursor-pointer">
+                            {% endif %}
                             <i class="{{ tag.fontawesome_icon }} text-base text-gray-500 w-5 text-center"></i>
                             <span>{{ tag.title }}</span>
                         </label>
                         {% empty %}
-                        <p class="text-gray-500 italic col-span-full text-xs" id="no_skills_msg">{% translate "Nenhuma
-                            tag cadastrada no banco." %}</p>
+                        <p class="text-gray-500 italic col-span-full text-xs" id="no_skills_msg">
+                            {% translate "Nenhuma tag cadastrada no banco." %}
+                        </p>
                         {% endfor %}
                     </div>
                     <!-- Nova Tag Direta -->
                     <div
                         class="flex flex-col sm:flex-row gap-3 items-end mt-3 p-4 border border-gray-300 rounded bg-gray-50">
                         <div class="flex flex-col gap-1 flex-grow w-full">
-                            <label class="font-bold text-[10px] text-gray-600 font-mono">{% translate "Nome da Skill" %}
-                                *</label>
+                            <label class="font-bold text-[10px] text-gray-600 font-mono">
+                                {% translate "Nome da Skill" %} *
+                            </label>
                             <input type="text" id="new_tag_title"
                                 class="bg-white border border-gray-300 rounded px-3 py-1.5 focus:outline-none focus:border-teal-600 text-gray-900 text-xs font-mono"
                                 placeholder="Ex: Docker">
                         </div>
                         <div class="flex flex-col gap-1 flex-grow w-full">
-                            <label class="font-bold text-[10px] text-gray-600 font-mono">{% translate "Classe
-                                FontAwesome (Opcional)" %}</label>
+                            <label class="font-bold text-[10px] text-gray-600 font-mono">
+                                {% translate "Classe FontAwesome (Opcional)" %}
+                            </label>
                             <input type="text" id="new_tag_icon"
                                 class="bg-white border border-gray-300 rounded px-3 py-1.5 focus:outline-none focus:border-teal-600 text-gray-900 text-xs font-mono"
                                 placeholder="Ex: fa-brands fa-docker">
