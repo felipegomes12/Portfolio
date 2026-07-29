@@ -617,3 +617,99 @@ msgstr "No file"
 msgid "Remover Currículo"
 msgstr "Remove Resume"
 
+# GitHub Sync & Stats Card Translations
+msgid "Projeto no GitHub"
+msgstr "Project on GitHub"
+
+msgid "Stars"
+msgstr "Stars"
+
+msgid "Forks"
+msgstr "Forks"
+
+msgid "Tamanho"
+msgstr "Size"
+
+msgid "Última atualização:"
+msgstr "Last updated:"
+
+msgid "N/D"
+msgstr "N/A"
+
+msgid "Agendador GitHub"
+msgstr "GitHub Scheduler"
+
+msgid "Agendador GitHub & Estatísticas"
+msgstr "GitHub Scheduler & Statistics"
+
+msgid "Configure a frequência de atualização dos repositórios do GitHub, execute sincronizações manuais e acompanhe o histórico das tarefas executadas pelo Django Q2."
+msgstr "Configure the update frequency for GitHub repositories, perform manual syncs, and track the history of tasks executed by Django Q2."
+
+msgid "Configurar Frequência"
+msgstr "Configure Frequency"
+
+msgid "Habilitar Atualização Automática"
+msgstr "Enable Automatic Updates"
+
+msgid "Frequência de Sincronização"
+msgstr "Sync Frequency"
+
+msgid "A cada 15 Minutos"
+msgstr "Every 15 Minutes"
+
+msgid "A cada 30 Minutos"
+msgstr "Every 30 Minutes"
+
+msgid "A cada 1 Hora (Recomendado)"
+msgstr "Every 1 Hour (Recommended)"
+
+msgid "A cada 6 Horas"
+msgstr "Every 6 Hours"
+
+msgid "A cada 12 Horas"
+msgstr "Every 12 Hours"
+
+msgid "Diariamente (24 Horas)"
+msgstr "Daily (24 Hours)"
+
+msgid "Próxima execução:"
+msgstr "Next run:"
+
+msgid "Salvar Configuração"
+msgstr "Save Configuration"
+
+msgid "Sincronização Manual"
+msgstr "Manual Sync"
+
+msgid "Clique no botão abaixo para buscar imediatamente as métricas atualizadas (Stars, Forks, Tamanho e Data) da API do GitHub para todos os projetos ativos."
+msgstr "Click the button below to immediately fetch updated metrics (Stars, Forks, Size, and Date) from the GitHub API for all active projects."
+
+msgid "Respeita o limite da API pública do GitHub. As métricas atualizadas serão salvas no banco de dados."
+msgstr "Respects GitHub public API limits. Updated metrics will be saved to the database."
+
+msgid "Sincronizar Agora"
+msgstr "Sync Now"
+
+msgid "Histórico de Execuções"
+msgstr "Execution History"
+
+msgid "Duração"
+msgstr "Duration"
+
+msgid "Detalhes / Resultado"
+msgstr "Details / Result"
+
+msgid "Carregando histórico..."
+msgstr "Loading history..."
+
+msgid "Ver"
+msgstr "View"
+
+msgid "Repositório no GitHub"
+msgstr "GitHub Repository"
+
+msgid "Ver no GitHub"
+msgstr "View on GitHub"
+
+
+

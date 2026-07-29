@@ -25,7 +25,11 @@
             <a href="/panel/admin/analytics/" class="text-md hover:shadow-2xl hover:text-emerald-500 hover:shadow-emerald-500 font-semibold px-4 py-2 border-b-4 border-transparent hover:border-emerald-500 hover:bg-gray-200 transition">
                 {% translate "Analytics" %} <i class="fa-solid fa-chart-line"></i>
             </a>
+            <a href="/panel/admin/github-sync/" class="text-md hover:shadow-2xl hover:text-emerald-500 hover:shadow-emerald-500 font-semibold px-4 py-2 border-b-4 border-transparent hover:border-emerald-500 hover:bg-gray-200 transition">
+                {% translate "Agendador GitHub" %} <i class="fa-brands fa-github"></i>
+            </a>
         </div>
+
 
         <div class="flex justify-end gap-2 items-center">
             <form action="{% url 'set_language' %}" method="post" class="inline">

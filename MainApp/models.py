@@ -76,6 +76,22 @@ class MyProjects(models.Model):
     add_on = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=False)
 
+    # GitHub Stats
+    github_repo_name = models.CharField(max_length=255, null=True, blank=True)
+    github_stars = models.IntegerField(default=0, null=True, blank=True)
+    github_forks = models.IntegerField(default=0, null=True, blank=True)
+    github_size_kb = models.IntegerField(default=0, null=True, blank=True)
+    github_description = models.TextField(null=True, blank=True)
+    github_updated_at = models.DateTimeField(null=True, blank=True)
+    github_last_synced = models.DateTimeField(null=True, blank=True)
+
+    @property
+    def github_size_mb(self):
+        if not self.github_size_kb:
+            return 0.0
+        return round(self.github_size_kb / 1024.0, 1)
+
+
 class Tags(models.Model):
     title = models.CharField(max_length=255)
     fontawesome_icon = models.CharField(max_length=255)

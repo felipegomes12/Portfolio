@@ -1181,4 +1181,110 @@ class DeleteCollaboratorView(LoginRequiredMixin, View):
             return JsonResponse({"error": "Colaborador não encontrado"}, status=404)
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=500)
+
+
+# GitHub Sync & Schedule Views
+from django_q.models import Schedule, Task
+from .tasks import sync_github_stats
+
+class AdminGithubSyncTemplateView(LoginRequiredMixin, TemplateView):
+    template_name = "admin/github_sync.html"
+
+    def get(self, request):
+        return render(request, self.template_name)
+
+
+class GitHubSyncStatusView(LoginRequiredMixin, View):
+    def get(self, request):
+        try:
+            sched = Schedule.objects.filter(func="MainApp.tasks.sync_github_stats").first()
+            enabled = bool(sched)
+            minutes = sched.minutes if (sched and sched.minutes) else 60
+            next_run = sched.next_run.strftime("%d/%m/%Y %H:%M:%S") if (sched and sched.next_run) else "-"
+
+            tasks = Task.objects.filter(func="MainApp.tasks.sync_github_stats").order_by("-started")[:20]
+            if not tasks.exists():
+                tasks = Task.objects.all().order_by("-started")[:20]
+
+            history = []
+            for t in tasks:
+                history.append({
+                    "id": t.id,
+                    "name": t.name or t.func,
+                    "started": t.started.strftime("%d/%m/%Y %H:%M:%S") if t.started else "-",
+                    "stopped": t.stopped.strftime("%d/%m/%Y %H:%M:%S") if t.stopped else "-",
+                    "time_taken": round(t.time_taken(), 2) if hasattr(t, 'time_taken') and callable(t.time_taken) else 0,
+                    "success": t.success,
+                    "result": str(t.result) if t.result else ("Erro" if not t.success else "Concluído")
+                })
+
+            return JsonResponse({
+                "enabled": enabled,
+                "minutes": minutes,
+                "next_run": next_run,
+                "history": history
+            })
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+
+
+class GitHubSyncConfigView(LoginRequiredMixin, View):
+    def post(self, request):
+        try:
+            enabled = request.POST.get("enabled") == "true"
+            minutes = int(request.POST.get("minutes", 60))
+
+            if not enabled:
+                Schedule.objects.filter(func="MainApp.tasks.sync_github_stats").delete()
+                return JsonResponse({"message": "Agendamento desabilitado com sucesso."})
+
+            sched = Schedule.objects.filter(func="MainApp.tasks.sync_github_stats").first()
+            if not sched:
+                sched = Schedule.objects.create(
+                    name="sync_github_stats",
+                    func="MainApp.tasks.sync_github_stats",
+                    schedule_type=Schedule.MINUTES,
+                    minutes=minutes,
+                    repeats=-1,
+                    next_run=timezone.now()
+                )
+            else:
+                sched.name = "sync_github_stats"
+                sched.schedule_type = Schedule.MINUTES
+                sched.minutes = minutes
+                sched.repeats = -1
+                sched.save()
+
+            return JsonResponse({"message": "Configurações de agendamento salvas com sucesso."})
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+
+
+class GitHubSyncRunNowView(LoginRequiredMixin, View):
+    def post(self, request):
+        start_time = timezone.now()
+        try:
+            res = sync_github_stats()
+            end_time = timezone.now()
+            Task.objects.create(
+                name="sync_github_stats",
+                func="MainApp.tasks.sync_github_stats",
+                started=start_time,
+                stopped=end_time,
+                success=True,
+                result=res
+            )
+            return JsonResponse({"message": res})
+        except Exception as e:
+            end_time = timezone.now()
+            Task.objects.create(
+                name="sync_github_stats",
+                func="MainApp.tasks.sync_github_stats",
+                started=start_time,
+                stopped=end_time,
+                success=False,
+                result=str(e)
+            )
+            return JsonResponse({"error": str(e)}, status=500)
+
         

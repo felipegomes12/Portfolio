@@ -151,10 +151,10 @@
             <div class="flex-grow rounded-b-lg border-l-16 border-r-8 border-b-8 shadow-md bg-gray-100 border-teal-800 flex flex-col overflow-hidden">
                 <!-- Cabeçalhos das abas -->
                 <div class="bg-gray-200 border-b border-gray-300 flex">
-                    <button onclick="switchTab('github')" id="tab-btn-github" class="tab-btn active px-4 py-2 text-xs font-bold border-r border-gray-300 bg-gray-100 text-teal-900 cursor-pointer">
+                    <button onclick="switchTab('github')" id="tab-btn-github" class="tab-btn {% if project.project_github_rep_link %}active bg-gray-100 text-teal-900{% else %}text-gray-600 hover:bg-gray-50{% endif %} px-4 py-2 text-xs font-bold border-r border-gray-300 cursor-pointer">
                         GitHub
                     </button>
-                    <button onclick="switchTab('recursos')" id="tab-btn-recursos" class="tab-btn px-4 py-2 text-xs font-bold text-gray-600 hover:bg-gray-50 cursor-pointer">
+                    <button onclick="switchTab('recursos')" id="tab-btn-recursos" class="tab-btn {% if not project.project_github_rep_link %}active bg-gray-100 text-teal-900{% else %}text-gray-600 hover:bg-gray-50{% endif %} px-4 py-2 text-xs font-bold border-r border-gray-300 cursor-pointer">
                         {% translate "Recursos" %}
                     </button>
                 </div>
@@ -162,22 +162,78 @@
                 <!-- Conteúdo das abas -->
                 <div class="p-5 flex-grow text-xs leading-relaxed text-gray-700">
                     <!-- Conteúdo: GitHub -->
-                    <div id="tab-content-github" class="tab-content flex flex-col gap-4">
-                        <h4 class="font-bold text-gray-900 text-sm flex items-center gap-1.5">
-                            <i class="fa-brands fa-github text-base"></i> {% translate "Repositório Código" %}
+                    <div id="tab-content-github" class="tab-content {% if not project.project_github_rep_link %}hidden{% endif %} flex flex-col gap-4">
+                        <h4 class="font-bold text-gray-900 text-sm flex items-center gap-1.5 border-b border-gray-300 pb-2 font-mono">
+                            <i class="fa-brands fa-github text-teal-700 text-base"></i> {% translate "Repositório no GitHub" %}
                         </h4>
+
                         {% if project.project_github_rep_link %}
-                            <p>{% translate "Este projeto está sob controle de versão. Visite o repositório público no GitHub para explorar o código fonte, commits, issues e releases:" %}</p>
-                            <a href="{{ project.project_github_rep_link }}" target="_blank" class="w-full text-center bg-gray-900 hover:bg-gray-800 text-white font-bold py-2.5 rounded flex justify-center items-center gap-2 transition shadow cursor-pointer text-xs">
-                                <i class="fa-brands fa-github text-sm"></i> {% translate "Abrir no GitHub" %}
+                            <!-- Card Integrado ao Estilo do Tema -->
+                            <div class="bg-white border border-gray-300 rounded-lg p-4 flex flex-col gap-3.5 shadow-sm font-mono">
+                                <div>
+                                    <h5 class="text-sm font-bold text-gray-900 flex items-center gap-1.5">
+                                        <i class="fa-solid fa-code-branch text-teal-600 text-xs"></i>
+                                        {{ project.github_repo_name|default:project.project_title }}
+                                    </h5>
+                                    <p class="text-xs text-gray-600 leading-relaxed mt-1">
+                                        {% if LANGUAGE_CODE|slice:":2" == 'en' and project.project_description_en %}
+                                            {{ project.github_description|default:project.project_description_en }}
+                                        {% else %}
+                                            {{ project.github_description|default:project.project_description }}
+                                        {% endif %}
+                                    </p>
+                                </div>
+
+                                <!-- Grid de Métricas (Estilo terminal leve) -->
+                                <div class="grid grid-cols-3 gap-2 bg-gray-100 border border-gray-200 rounded p-2.5 text-center font-mono">
+                                    <div class="flex flex-col items-center">
+                                        <span class="text-sm font-extrabold text-teal-900">{{ project.github_stars|default:0 }}</span>
+                                        <span class="text-[10px] text-gray-600 font-semibold flex items-center gap-1 mt-0.5">
+                                            <i class="fa-solid fa-star text-amber-500"></i> {% translate "Stars" %}
+                                        </span>
+                                    </div>
+                                    <div class="flex flex-col items-center border-x border-gray-300 px-1">
+                                        <span class="text-sm font-extrabold text-teal-900">{{ project.github_forks|default:0 }}</span>
+                                        <span class="text-[10px] text-gray-600 font-semibold flex items-center gap-1 mt-0.5">
+                                            <i class="fa-solid fa-code-fork text-blue-600"></i> {% translate "Forks" %}
+                                        </span>
+                                    </div>
+                                    <div class="flex flex-col items-center">
+                                        <span class="text-sm font-extrabold text-teal-900">{{ project.github_size_mb }} MB</span>
+                                        <span class="text-[10px] text-gray-600 font-semibold flex items-center gap-1 mt-0.5">
+                                            <i class="fa-solid fa-database text-emerald-600"></i> {% translate "Tamanho" %}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <!-- Data de Última Atualização -->
+                                <div class="text-[11px] text-gray-500 font-mono flex items-center justify-between pt-1 border-t border-gray-200">
+                                    <span class="flex items-center gap-1">
+                                        <i class="fa-regular fa-clock text-teal-600"></i> {% translate "Última atualização:" %}
+                                    </span>
+                                    <span class="font-bold text-gray-800">
+                                        {% if project.github_updated_at %}
+                                            {{ project.github_updated_at|date:"d/m/Y" }}
+                                        {% else %}
+                                            {% translate "N/D" %}
+                                        {% endif %}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Botão de Ação no estilo do site -->
+                            <a href="{{ project.project_github_rep_link }}" target="_blank"
+                                class="w-full text-center bg-gray-900 hover:bg-gray-800 text-white font-bold py-2.5 rounded flex justify-center items-center gap-2 transition shadow cursor-pointer text-xs font-mono">
+                                <i class="fa-brands fa-github text-sm"></i> {% translate "Ver no GitHub" %}
                             </a>
                         {% else %}
-                            <p class="text-gray-500 italic">{% translate "Nenhum repositório do GitHub foi cadastrado para este projeto." %}</p>
+                            <p class="text-gray-500 italic font-mono">{% translate "Nenhum repositório do GitHub foi cadastrado para este projeto." %}</p>
                         {% endif %}
                     </div>
 
                     <!-- Conteúdo: Recursos -->
-                    <div id="tab-content-recursos" class="tab-content hidden flex flex-col gap-4">
+                    <div id="tab-content-recursos" class="tab-content {% if project.project_github_rep_link %}hidden{% endif %} flex flex-col gap-4">
+
                         <h4 class="font-bold text-gray-900 text-sm">
                             {% if LANGUAGE_CODE|slice:":2" == 'en' and project.project_resorce_title_en %}
                                 {{ project.project_resorce_title_en }}

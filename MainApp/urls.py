@@ -50,4 +50,10 @@ urlpatterns = [
     path("api/collaborators/create/", CreateCollaboratorView.as_view()),
     path("api/collaborators/<int:id>/update/", UpdateCollaboratorView.as_view()),
     path("api/collaborators/<int:id>/delete/", DeleteCollaboratorView.as_view()),
-]
+
+    # GitHub Sync & Scheduler
+    path("panel/admin/github-sync/", AdminGithubSyncTemplateView.as_view(), name="AdminGithubSync"),
+    path("api/github-sync/status/", GitHubSyncStatusView.as_view()),
+    path("api/github-sync/config/", GitHubSyncConfigView.as_view()),
+    path("api/github-sync/run/", GitHubSyncRunNowView.as_view()),
+]

@@ -1,0 +1,139 @@
+{% extends "admin/base.html" %}
+{% load static %}
+{% load i18n %}
+{% block content %}
+<div class="max-w-5xl w-full px-6 py-10 font-mono text-gray-800 flex flex-col gap-8">
+
+    <!-- Cabeçalho -->
+    <div class="w-full flex flex-col">
+        <div class="bg-gray-100 border-t-16 rounded-t-lg border-l-16 border-b-8 border-r-8 shadow-xl p-3 flex justify-between items-center border-teal-800">
+            <h1 class="text-md font-bold text-gray-900 flex items-center gap-2">
+                <i class="fa-brands fa-github text-teal-600"></i> github://admin/scheduler.sh
+            </h1>
+            <div class="flex gap-2">
+                <div class="bg-blue-600 w-3 h-3 rounded-full"></div>
+                <div class="bg-yellow-500 w-3 h-3 rounded-full"></div>
+                <div class="bg-red-500 w-3 h-3 rounded-full"></div>
+            </div>
+        </div>
+        <div class="p-8 rounded-b-lg border-l-16 border-r-8 border-b-8 shadow-xl bg-gray-100 border-teal-800 flex flex-col gap-4">
+            <h2 class="text-2xl font-bold text-gray-900">{% translate "Agendador GitHub & Estatísticas" %}</h2>
+            <p class="text-sm text-gray-600 leading-relaxed">
+                {% translate "Configure a frequência de atualização dos repositórios do GitHub, execute sincronizações manuais e acompanhe o histórico das tarefas executadas pelo Django Q2." %}
+            </p>
+        </div>
+    </div>
+
+    <!-- Cards de Controle -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <!-- Card: Configuração de Frequência -->
+        <div class="flex flex-col">
+            <div class="bg-gray-100 border-t-16 rounded-t-lg border-l-16 border-b-8 border-r-8 shadow-md p-2 flex justify-between items-center border-teal-800">
+                <span class="text-xs font-bold text-gray-900">schedule_config.json</span>
+                <div class="bg-teal-600 w-2.5 h-2.5 rounded-full"></div>
+            </div>
+            <div class="p-6 rounded-b-lg border-l-16 border-r-8 border-b-8 shadow-md bg-gray-100 border-teal-800 flex flex-col gap-4">
+                <h3 class="text-base font-bold text-gray-900 flex items-center gap-2">
+                    <i class="fa-solid fa-clock text-teal-700"></i> {% translate "Configurar Frequência" %}
+                </h3>
+
+                <form id="github_schedule_form" onsubmit="saveScheduleConfig(event)" class="flex flex-col gap-4">
+                    <label class="flex items-center gap-3 cursor-pointer text-sm font-bold text-gray-800">
+                        <input type="checkbox" id="sync_enabled" class="w-4 h-4 rounded text-teal-600 focus:ring-teal-500 cursor-pointer">
+                        <span>{% translate "Habilitar Atualização Automática" %}</span>
+                    </label>
+
+                    <div class="flex flex-col gap-1">
+                        <label for="sync_minutes" class="text-xs font-bold text-gray-700">{% translate "Frequência de Sincronização" %}</label>
+                        <select id="sync_minutes" class="bg-white border border-gray-300 rounded p-2 text-xs font-mono font-semibold focus:outline-none focus:border-teal-600 cursor-pointer">
+                            <option value="15">{% translate "A cada 15 Minutos" %}</option>
+                            <option value="30">{% translate "A cada 30 Minutos" %}</option>
+                            <option value="60">{% translate "A cada 1 Hora (Recomendado)" %}</option>
+                            <option value="360">{% translate "A cada 6 Horas" %}</option>
+                            <option value="720">{% translate "A cada 12 Horas" %}</option>
+                            <option value="1440">{% translate "Diariamente (24 Horas)" %}</option>
+                        </select>
+                    </div>
+
+                    <div class="text-xs text-gray-600 bg-white border border-gray-300 rounded p-3 flex flex-col gap-1">
+                        <div><span class="font-bold">{% translate "Próxima execução:" %}</span> <span id="next_run_display" class="font-semibold text-teal-800">-</span></div>
+                    </div>
+
+                    <button type="submit" id="save_schedule_btn" class="bg-teal-700 hover:bg-teal-800 text-white font-bold py-2 px-4 rounded text-xs transition shadow cursor-pointer flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-floppy-disk"></i> {% translate "Salvar Configuração" %}
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Card: Sincronização Manual -->
+        <div class="flex flex-col">
+            <div class="bg-gray-100 border-t-16 rounded-t-lg border-l-16 border-b-8 border-r-8 shadow-md p-2 flex justify-between items-center border-teal-800">
+                <span class="text-xs font-bold text-gray-900">manual_sync.sh</span>
+                <div class="bg-teal-600 w-2.5 h-2.5 rounded-full"></div>
+            </div>
+            <div class="p-6 rounded-b-lg border-l-16 border-r-8 border-b-8 shadow-md bg-gray-100 border-teal-800 flex flex-col justify-between h-full gap-4">
+                <div class="flex flex-col gap-2">
+                    <h3 class="text-base font-bold text-gray-900 flex items-center gap-2">
+                        <i class="fa-solid fa-rotate text-teal-700"></i> {% translate "Sincronização Manual" %}
+                    </h3>
+                    <p class="text-xs text-gray-600 leading-relaxed">
+                        {% translate "Clique no botão abaixo para buscar imediatamente as métricas atualizadas (Stars, Forks, Tamanho e Data) da API do GitHub para todos os projetos ativos." %}
+                    </p>
+                </div>
+
+                <div class="bg-emerald-50 border border-emerald-200 rounded p-3 text-xs text-emerald-800 flex items-start gap-2">
+                    <i class="fa-solid fa-circle-info text-emerald-600 text-sm shrink-0 mt-0.5"></i>
+                    <span>{% translate "Respeita o limite da API pública do GitHub. As métricas atualizadas serão salvas no banco de dados." %}</span>
+                </div>
+
+                <button type="button" id="run_now_btn" onclick="runSyncNow()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-4 rounded text-xs transition shadow cursor-pointer flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-play"></i> <span id="run_now_text">{% translate "Sincronizar Agora" %}</span>
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Tabela: Histórico de Tarefas -->
+    <div class="flex flex-col">
+        <div class="bg-gray-100 border-t-16 rounded-t-lg border-l-16 border-b-8 border-r-8 shadow-md p-2 flex justify-between items-center border-teal-800">
+            <span class="text-xs font-bold text-gray-900">task_history.log</span>
+            <span class="text-[10px] text-gray-500 font-mono">django_q_task</span>
+        </div>
+        <div class="p-6 rounded-b-lg border-l-16 border-r-8 border-b-8 shadow-md bg-gray-100 border-teal-800 flex flex-col gap-4">
+            <div class="flex items-center justify-between">
+                <h3 class="text-base font-bold text-gray-900 flex items-center gap-2">
+                    <i class="fa-solid fa-list-check text-teal-700"></i> {% translate "Histórico de Execuções" %}
+                </h3>
+                <button type="button" onclick="loadSyncStatus()" class="text-xs font-bold text-teal-700 hover:text-teal-900 flex items-center gap-1 cursor-pointer">
+                    <i class="fa-solid fa-arrows-rotate"></i> {% translate "Atualizar" %}
+                </button>
+            </div>
+
+            <div class="overflow-x-auto border border-gray-300 rounded bg-white">
+                <table class="w-full text-left text-xs border-collapse">
+                    <thead>
+                        <tr class="bg-gray-200 text-gray-700 border-b border-gray-300">
+                            <th class="p-3 font-bold">ID</th>
+                            <th class="p-3 font-bold">{% translate "Início" %}</th>
+                            <th class="p-3 font-bold">{% translate "Duração" %}</th>
+                            <th class="p-3 font-bold">{% translate "Status" %}</th>
+                            <th class="p-3 font-bold">{% translate "Detalhes / Resultado" %}</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history_table_body">
+                        <tr>
+                            <td colspan="5" class="p-4 text-center text-gray-400 italic">{% translate "Carregando histórico..." %}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script src="{% static 'js/adminGithubSync.js' %}"></script>
+{% endblock %}
