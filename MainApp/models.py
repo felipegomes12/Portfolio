@@ -105,6 +105,8 @@ class ProfileInfo(models.Model):
     img_x = models.FloatField(default=0.0, null=True, blank=True)
     img_y = models.FloatField(default=0.0, null=True, blank=True)
     resume = models.FileField(upload_to="resumes/", blank=True, null=True)
+    resume_en = models.FileField(upload_to="resumes/", blank=True, null=True)
+
 
 
 class ProfessionalExp(models.Model):

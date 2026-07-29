@@ -125,6 +125,8 @@ function saveProfile(e) {
     form.append("img_y", document.getElementById("img_y").value);
     form.append("clear_profile_img", document.getElementById("clear_profile_img").value);
     form.append("clear_resume", document.getElementById("clear_resume").value);
+    const clearResumeEnEl = document.getElementById("clear_resume_en");
+    if (clearResumeEnEl) form.append("clear_resume_en", clearResumeEnEl.value);
     
     // Datas
     const dateBirth = document.getElementById("date_birth").value;
@@ -138,11 +140,18 @@ function saveProfile(e) {
         form.append("profile_img", fileInput.files[0]);
     }
 
-    // Currículo
+    // Currículo PT
     const resumeInput = document.getElementById("resume");
-    if (resumeInput.files.length > 0) {
+    if (resumeInput && resumeInput.files.length > 0) {
         form.append("resume", resumeInput.files[0]);
     }
+
+    // Currículo EN
+    const resumeEnInput = document.getElementById("resume_en");
+    if (resumeEnInput && resumeEnInput.files.length > 0) {
+        form.append("resume_en", resumeEnInput.files[0]);
+    }
+
 
     // Tags (Skills)
     const tagCheckboxes = document.querySelectorAll("input[name='tag_checkboxes']:checked");
@@ -273,7 +282,7 @@ function clearResumeFile() {
     if (confirm("Deseja marcar o currículo atual para remoção?")) {
         document.getElementById("clear_resume").value = "true";
         document.getElementById("resume").value = null; // Limpa input
-        document.getElementById("resume_filename_label").textContent = "Selecione o arquivo do currículo";
+        document.getElementById("resume_filename_label").textContent = "Selecione o arquivo em português";
 
         const statusText = document.getElementById("resume_status_text");
         statusText.innerHTML = `<span class="text-red-500 italic">Marcado para remoção</span>`;
@@ -281,7 +290,54 @@ function clearResumeFile() {
         const btn = document.getElementById("remove_resume_btn");
         if (btn) btn.remove();
 
-        showToast("Currículo marcado para remoção. Clique em 'Salvar Perfil' para confirmar.", "info");
+        showToast("Currículo em português marcado para remoção. Clique em 'Salvar Perfil' para confirmar.", "info");
     }
 }
+
+// Preview do currículo em inglês selecionado
+function previewResumeEnFile(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Desmarca a flag de exclusão
+    document.getElementById("clear_resume_en").value = "false";
+
+    // Atualiza o label do arquivo selecionado
+    document.getElementById("resume_en_filename_label").textContent = file.name;
+
+    // Atualiza o status
+    const statusText = document.getElementById("resume_en_status_text");
+    statusText.innerHTML = `<span class="text-amber-600 font-bold"><i class="fa-solid fa-file-arrow-up"></i> ${file.name} (Pronto para salvar)</span>`;
+
+    // Garante que o botão de exclusão exista
+    let removeBtn = document.getElementById("remove_resume_en_btn");
+    if (!removeBtn) {
+        const container = document.getElementById("resume_en_status_container");
+        removeBtn = document.createElement("button");
+        removeBtn.type = "button";
+        removeBtn.id = "remove_resume_en_btn";
+        removeBtn.onclick = clearResumeEnFile;
+        removeBtn.className = "text-left text-[10px] text-red-600 hover:text-red-800 font-bold font-mono transition cursor-pointer mt-1";
+        removeBtn.innerHTML = `<i class="fa-solid fa-trash-can"></i> Remover Currículo (EN)`;
+        container.appendChild(removeBtn);
+    }
+}
+
+// Limpar currículo em inglês local e marcar para exclusão no banco
+function clearResumeEnFile() {
+    if (confirm("Deseja marcar o currículo em inglês para remoção?")) {
+        document.getElementById("clear_resume_en").value = "true";
+        document.getElementById("resume_en").value = null; // Limpa input
+        document.getElementById("resume_en_filename_label").textContent = "Selecione o arquivo em inglês";
+
+        const statusText = document.getElementById("resume_en_status_text");
+        statusText.innerHTML = `<span class="text-red-500 italic">Marcado para remoção</span>`;
+
+        const btn = document.getElementById("remove_resume_en_btn");
+        if (btn) btn.remove();
+
+        showToast("Currículo em inglês marcado para remoção. Clique em 'Salvar Perfil' para confirmar.", "info");
+    }
+}
+
 

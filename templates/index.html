@@ -112,12 +112,32 @@
                             <i class="fa-brands fa-whatsapp text-lg"></i> WhatsApp
                         </a>
                         {% endif %}
-                        {% if profile and profile.resume %}
-                        <a href="{{ profile.resume.url }}" target="_blank" download
-                            class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded flex items-center gap-2 transition cursor-pointer text-sm shadow">
-                            <i class="fa-solid fa-file-arrow-down text-lg"></i> {% translate "Currículo" %}
-                        </a>
+                        {% if LANGUAGE_CODE|slice:":2" == 'en' %}
+                            {% if profile and profile.resume_en %}
+                            <a href="{{ profile.resume_en.url }}" target="_blank" download
+                                class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded flex items-center gap-2 transition cursor-pointer text-sm shadow">
+                                <i class="fa-solid fa-file-arrow-down text-lg"></i> {% translate "Currículo" %}
+                            </a>
+                            {% elif profile and profile.resume %}
+                            <a href="{{ profile.resume.url }}" target="_blank" download
+                                class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded flex items-center gap-2 transition cursor-pointer text-sm shadow">
+                                <i class="fa-solid fa-file-arrow-down text-lg"></i> {% translate "Currículo" %}
+                            </a>
+                            {% endif %}
+                        {% else %}
+                            {% if profile and profile.resume %}
+                            <a href="{{ profile.resume.url }}" target="_blank" download
+                                class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded flex items-center gap-2 transition cursor-pointer text-sm shadow">
+                                <i class="fa-solid fa-file-arrow-down text-lg"></i> {% translate "Currículo" %}
+                            </a>
+                            {% elif profile and profile.resume_en %}
+                            <a href="{{ profile.resume_en.url }}" target="_blank" download
+                                class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded flex items-center gap-2 transition cursor-pointer text-sm shadow">
+                                <i class="fa-solid fa-file-arrow-down text-lg"></i> {% translate "Currículo" %}
+                            </a>
+                            {% endif %}
                         {% endif %}
+
                     </div>
                 </div>
             </div>
