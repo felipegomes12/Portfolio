@@ -1208,12 +1208,20 @@ class GitHubSyncStatusView(LoginRequiredMixin, View):
 
             history = []
             for t in tasks:
+                tt = 0
+                if t.stopped and t.started:
+                    tt = round((t.stopped - t.started).total_seconds(), 2)
+                elif hasattr(t, 'time_taken') and callable(t.time_taken):
+                    try:
+                        tt = round(t.time_taken(), 2)
+                    except:
+                        pass
                 history.append({
-                    "id": t.id,
+                    "id": str(t.id)[:8] if t.id else "-",
                     "name": t.name or t.func,
                     "started": t.started.strftime("%d/%m/%Y %H:%M:%S") if t.started else "-",
                     "stopped": t.stopped.strftime("%d/%m/%Y %H:%M:%S") if t.stopped else "-",
-                    "time_taken": round(t.time_taken(), 2) if hasattr(t, 'time_taken') and callable(t.time_taken) else 0,
+                    "time_taken": tt,
                     "success": t.success,
                     "result": str(t.result) if t.result else ("Erro" if not t.success else "Concluído")
                 })
@@ -1262,11 +1270,13 @@ class GitHubSyncConfigView(LoginRequiredMixin, View):
 
 class GitHubSyncRunNowView(LoginRequiredMixin, View):
     def post(self, request):
+        import uuid
         start_time = timezone.now()
         try:
             res = sync_github_stats()
             end_time = timezone.now()
             Task.objects.create(
+                id=uuid.uuid4().hex,
                 name="sync_github_stats",
                 func="MainApp.tasks.sync_github_stats",
                 started=start_time,
@@ -1277,14 +1287,19 @@ class GitHubSyncRunNowView(LoginRequiredMixin, View):
             return JsonResponse({"message": res})
         except Exception as e:
             end_time = timezone.now()
-            Task.objects.create(
-                name="sync_github_stats",
-                func="MainApp.tasks.sync_github_stats",
-                started=start_time,
-                stopped=end_time,
-                success=False,
-                result=str(e)
-            )
+            try:
+                Task.objects.create(
+                    id=uuid.uuid4().hex,
+                    name="sync_github_stats",
+                    func="MainApp.tasks.sync_github_stats",
+                    started=start_time,
+                    stopped=end_time,
+                    success=False,
+                    result=str(e)
+                )
+            except:
+                pass
             return JsonResponse({"error": str(e)}, status=500)
+
 
         

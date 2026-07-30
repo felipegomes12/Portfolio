@@ -19,14 +19,6 @@ function esc(str) {
         .replace(/'/g, "&#039;");
 }
 
-// Toast notification fallback
-function showToast(message, type = "info") {
-    if (typeof window.showToast === "function") {
-        window.showToast(message, type);
-    } else {
-        alert(message);
-    }
-}
 
 // Carregar status e histórico
 function loadSyncStatus() {
